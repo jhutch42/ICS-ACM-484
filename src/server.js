@@ -2,6 +2,7 @@
 const express = require('express');
 const readline = require('readline');
 const fs = require('fs');
+const { load } = require('mime');
 
 // Define Express App
 const app = express();
@@ -13,7 +14,8 @@ app.listen(PORT, () => {
     console.log('Server connected at:', PORT);
 });
 
-const data = [];
+const openingsList = [];
+const classicalGames = [];
 
 // async function processLineByLine(callback) {
 //     const fileStream = fs.createReadStream('chessDataFiles/ratedClassicalGame.csv');
@@ -126,8 +128,41 @@ const data = [];
 //     });
 // }
 
-function writeFile(filename, object) {
-    fs.writeFile(filename, JSON.stringify(object), (error, result) => {
-        if (error) console.log(error);
+// function writeFile(filename, object) {
+//     fs.writeFile(filename, JSON.stringify(object), (error, result) => {
+//         if (error) console.log(error);
+//     });
+// }
+let count = 0;
+function loadAllData() {
+    for (let i = 0; i < 30; i++) {
+        const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+        fs.readFile(filename, 'utf8', (error, data) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const list = JSON.parse(data);
+            Object.values(list).forEach(object => {
+                classicalGames.push(object);
+            });
+            count++;
+            if (count === 30) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
+            else console.log(`${count} files loaded`);
+        });
+
+    }
+    fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        const list = JSON.parse(data);
+        Object.values(list).forEach(object => {
+            openingsList.push(object);
+        });
+        console.log(`Openings Data Loaded. ${openingsList.length} openings`);
     });
 }
+
+loadAllData();
