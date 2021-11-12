@@ -32,7 +32,7 @@ async function processLineByLine(callback) {
     callback(data);
 }
 
-processLineByLine(parseCSV);
+//processLineByLine(parseCSV);
 // createOpeningsJSONFile(checkForCompletion);
 
 function parseCSV(dataArray) {
