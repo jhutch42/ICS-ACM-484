@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // Define Express App
 const app = express();
-app.use(express.static('./public')); 
+app.use(express.static('./public'));
 
 const PORT = process.env.PORT || 4040;
 
@@ -49,6 +49,7 @@ function parseCSV(dataArray) {
             for (let j = 0; j < headerArray.length; j++) {
                 jsonObject[headerArray[j]] = lineArray[j];
             }
+
             if (jsonObject.Termination !== 'Abandoned' && jsonObject.Termination !== 'Rules infraction' && jsonObject.Termination !== 'Time forfeit') jsonData.push(jsonObject);
             if (i % 50000 === 0) console.log(i);
         }
@@ -57,6 +58,30 @@ function parseCSV(dataArray) {
         });
     }
 }
+
+function cleanOpeningsInJsonFiles(callback) {
+    for (let i = 0; i < 30; i++) {
+        console.log(i);
+        const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+        fs.readFile(filename, 'utf8', (error, data) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const list = JSON.parse(data);
+            Object.values(list).forEach(object => {
+                if  (object.Opening) {
+                    object.Opening = object.Opening.replace("\\", "");
+                    object.Opening = object.Opening.replace("\"", "");
+                }
+            });
+            callback(filename, list);
+        });
+    }
+}
+
+cleanOpeningsInJsonFiles(writeFile);
+
 // const openings = [];
 // function createOpeningsJSONFile(callback) {
 
