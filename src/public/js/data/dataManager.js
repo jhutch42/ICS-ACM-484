@@ -1,10 +1,13 @@
 export default class DataManager {
     publisher;  
     subscriber;
-    constructor(publisher, subscriber){
+    #WebWorkerManager;
+
+    constructor(publisher, subscriber, webWorkerManager){
         this.publisher = publisher;
         this.subscriber = subscriber;
         this.subscriber.setCallbackFunction(this.messageHandler);
+        this.#WebWorkerManager = webWorkerManager;
     };
 
     /**

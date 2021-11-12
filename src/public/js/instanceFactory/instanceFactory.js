@@ -2,12 +2,14 @@ import DataManager from "../data/dataManager.js";
 import Subscriber from "../communication/subscriber.js";
 import Publisher from "../communication/publisher.js";
 import CSVReader from "../data/csv/csvReader.js";
+import WebWorkerManager from "../webWorkers/webWorkerManager.js";
 
 export default class InstanceFactory {
     #numberOfDataManagers = 0;     // (Private) tracks number of DataManager Objects
     #numberOfSubscribers = 0;      // (Private) tracks number of Subscriber Objects
     #numberOfPublishers = 0;       // (Private) tracks number of Publisher Objects
-    #numberOfCsvReaders = 0;
+    #numberOfCsvReaders = 0;          
+    #numberOfWebWorkerManagers = 0;
     constructor() {};
     
     /**
@@ -17,9 +19,22 @@ export default class InstanceFactory {
     createDataManager() {
         if (this.#numberOfDataManagers === 0) {
             this.#numberOfDataManagers++;
-            return new DataManager(this.#createPublisher(), this.#createSubscriber());
+            return new DataManager(this.#createPublisher(), this.#createSubscriber(), this.#createWebWorkerManager());
         } 
         else console.log('Only 1 DataManager is allowed.');
+        return undefined;
+    }
+
+    /**
+     * Create A singleton Web Worker Manager.
+     * @returns a new Web Worker Manager object
+     */
+    #createWebWorkerManager() {
+        if (this.#numberOfWebWorkerManagers === 0) {
+            this.#numberOfWebWorkerManagers++;
+            return new WebWorkerManager();
+        } 
+        else console.log('Only 1 WebWorkerManager is allowed.');
         return undefined;
     }
 
