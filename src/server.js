@@ -1,11 +1,17 @@
 // server.js
 const express = require('express');
+const cors = require('cors');
+const app = express();
 const readline = require('readline');
 const fs = require('fs');
-const { load } = require('mime');
 
-// Define Express App
-const app = express();
+app.use(cors());
+app.use(
+    express.urlencoded({
+       extended: true
+    })
+ )
+ app.use(express.json())
 app.use(express.static('./public'));
 
 const PORT = process.env.PORT || 4040;
@@ -14,9 +20,27 @@ app.listen(PORT, () => {
     console.log('Server connected at:', PORT);
 });
 
+app.post('/', function (req, res) {
+    res.set({
+       "Content-Type": "application/json",
+       "Access-Control-Allow-Origin": "*",
+    });
+    const data = postHandler(req.body);
+    res.end(JSON.stringify(data));
+ });
+
 const openingsList = [];
 const classicalGames = [];
 
+
+function postHandler(postMessage) {
+    switch(postMessage.request) {
+        case 'Get All Game Data':
+            return classicalGames;
+        case 'Get All Openings':
+            return openingsList;
+    }
+}
 // async function processLineByLine(callback) {
 //     const fileStream = fs.createReadStream('chessDataFiles/ratedClassicalGame.csv');
 
@@ -134,8 +158,8 @@ const classicalGames = [];
 //     });
 // }
 let count = 0;
-function loadAllData() {
-    for (let i = 0; i < 30; i++) {
+function loadAllData(n) {
+    for (let i = 0; i < n; i++) {
         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
         fs.readFile(filename, 'utf8', (error, data) => {
             if (error) {
@@ -147,7 +171,7 @@ function loadAllData() {
                 classicalGames.push(object);
             });
             count++;
-            if (count === 30) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
+            if (count === n) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
             else console.log(`${count} files loaded`);
         });
 
@@ -165,4 +189,4 @@ function loadAllData() {
     });
 }
 
-loadAllData();
+loadAllData(12);

@@ -1,13 +1,17 @@
 export default class DataManager {
-    publisher;  
+    publisher;
     subscriber;
     #WebWorkerManager;
 
-    constructor(publisher, subscriber, webWorkerManager){
+    constructor(publisher, subscriber, webWorkerManager) {
         this.publisher = publisher;
         this.subscriber = subscriber;
         this.subscriber.setCallbackFunction(this.messageHandler);
         this.#WebWorkerManager = webWorkerManager;
+
+        // This function will return all games that the server allows( currently around 220,000)
+        //this.#WebWorkerManager.getData({ request: "Get All Game Data" });
+
     };
 
     /**

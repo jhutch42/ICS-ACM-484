@@ -29,6 +29,7 @@ this.onmessage = e => {
             postMessage('ID Set Successfully');
             break;
         case 'Get Data':
+            postData(url, {request:'Get All Game Data'}).then(data => {handleReturn(data)});
             postMessage({ type: 'Return With Data', data: [1, 2, 3, 4, 5], id: id});
             break;
     }
