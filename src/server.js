@@ -31,14 +31,16 @@ app.post('/', function (req, res) {
 
 const openingsList = [];
 const classicalGames = [];
-
+let dataIsSet = false;
 
 function postHandler(postMessage) {
     switch (postMessage.request) {
         case 'Get All Game Data':
-            return classicalGames;
+            return {request: postMessage.request, data: classicalGames};
         case 'Get All Openings':
-            return openingsList;
+            return {request: postMessage.request, data: openingsList};
+        case 'Is Data Ready':
+            return {request: postMessage.request, data: dataIsSet};
     }
 }
 
@@ -210,6 +212,7 @@ function loadAllData(n) {
                     game.Result = game.Result.replace('Jan-00', '1-0');
                 });
                 console.log('Done Cleaning Data');
+                dataIsSet = true;
                 // for(let i = 0; i < 20; i++) {
                 //     console.log(classicalGames[i]);
                 // }

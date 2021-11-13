@@ -29,13 +29,21 @@ this.onmessage = e => {
             postMessage('ID Set Successfully');
             break;
         case 'Get Data':
-            postData(url, {request:'Get All Game Data'}).then(data => {handleReturn('Return With Data', data)});
+            postData(url, {request:e.data.instructions.request}).then(data => {handleReturn('Return With Data', data)});
             break;
     }
 }
 
-const handleReturn = (messaage, data) => {
-    postMessage({message: message, data: data, id: id});
+const handleReturn = (message, data) => {
+    switch(data.request) {
+        case 'Is Data Ready':
+            if (data.data === false) postData(url, {request: 'Is Data Ready'}).then(data => {handleReturn('Return With Data', data)});
+            else postMessage({message: message, data: data, id: id});
+            break;
+        case 'Get All Game Data':
+            postMessage({message: message, data: data, id: id});
+            break;
+    }
 }
 
 function setId(newId) {

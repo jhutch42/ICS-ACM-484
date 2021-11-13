@@ -32,7 +32,7 @@ export default class InstanceFactory {
     #createWebWorkerManager() {
         if (this.#numberOfWebWorkerManagers === 0) {
             this.#numberOfWebWorkerManagers++;
-            return new WebWorkerManager();
+            return new WebWorkerManager(this.#createPublisher());
         } 
         else console.log('Only 1 WebWorkerManager is allowed.');
         return undefined;

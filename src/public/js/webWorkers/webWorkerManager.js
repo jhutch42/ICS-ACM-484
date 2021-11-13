@@ -2,8 +2,11 @@ export default class WebWorkerManager {
     #workerHashTable;
     #workerIdIndex;
     #workerQueue;
+    publisher;
 
-    constructor() {
+    constructor(publisher) {
+        this.publisher = publisher;
+        this.#workerIdIndex = -1;
         this.#workerHashTable = new Map();
         this.#workerQueue = [];
         this.#createWorkerPool(3);
@@ -49,13 +52,14 @@ export default class WebWorkerManager {
     }
 
     #handleReturn(data, id) {
-        console.log('Worker Has Returned');
+        console.log(data);
         this.#enqueueWorker(this.#workerHashTable.get(id).worker);
+        this.publisher.publishMessage({from: 'webWorkerManager', body: {message: data.request, data: data.data}});
     }
 
     #setWorkerMessageHandler(id) {
         this.#workerHashTable.get(id).worker.onmessage = (event, id) => {
-            if (event.data.type === 'Return With Data') this.#handleReturn(event.data, event.data.id);
+            if (event.data.message === 'Return With Data') this.#handleReturn(event.data.data, event.data.id);
             else console.log(event.data);
         }
     }
