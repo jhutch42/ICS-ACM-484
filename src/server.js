@@ -129,32 +129,32 @@ function postHandler(postMessage) {
 //     }
 // }
 
-cleanResultInJsonFiles(writeFile);
+// cleanResultInJsonFiles(writeFile);
+// function cleanResultInJsonFiles(callback) {
+//     for (let i = 0; i < 30; i++) {
 
-function cleanResultInJsonFiles(callback) {
-    for (let i = 0; i < 30; i++) {
+//         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+//         fs.readFile(filename, 'utf8', (error, data) => {
+//             if (error) {
+//                 console.log(error);
+//                 return;
+//             }
+//             const list = JSON.parse(data);
+//             Object.values(list).forEach(object => {
+//                 if  (object.Result) {
+//                     object.Result = object.Result.replace("Jan-00", "1-0");
+//                 }
+//             });
+//             callback(filename, list);
+//             count++;
+//             console.log(count);
+//         });
+//     }
+// }
 
-        const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
-        fs.readFile(filename, 'utf8', (error, data) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            const list = JSON.parse(data);
-            Object.values(list).forEach(object => {
-                if  (object.Result) {
-                    object.Opening = object.Opening.replace("Jan-00", "1-0");
-                }
-            });
-            callback(filename, list);
-        });
-    }
-}
-
-const openings = [];
+// const openings = [];
 
 
-// let count = 0;
 // function checkForCompletion () {
 //     count++;
 //     if (count === 15) {
