@@ -212,10 +212,12 @@ function loadAllData(n) {
                     game.Result = game.Result.replace('Jan-00', '1-0');
                 });
                 console.log('Done Cleaning Data');
-                dataIsSet = true;
-                // for(let i = 0; i < 20; i++) {
-                //     console.log(classicalGames[i]);
-                // }
+                for(let i = 0; i < 20; i++) {
+                    console.log(classicalGames[i]);
+                }
+                setTimeout(() =>{
+                    dataIsSet = true;
+                }, 500);
             }
             else console.log(`${count} files loaded`);
         });
@@ -312,7 +314,7 @@ function parseGameMoves(gameString) {
         }
     }
 
-    let movesObjects = [];
+    let movesObjects = {};
     for (let i = 0; i < moves.length; i += 2) {
         const num = moves[i];
         const move = moves[i + 1];
