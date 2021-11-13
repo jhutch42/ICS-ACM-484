@@ -214,45 +214,40 @@ function loadAllData(n) {
     });
 }
 
-// loadAllData(1);
+loadAllData(1);
 
-// function getDataWithFilters(object) {
-//     // TODO: Write a function that will mimic a database query and return JSON object
-// }
-// setTimeout(() => {
-//     parseGameMoves();
-// }, 1000);
+function getDataWithFilters(object) {
+    // TODO: Write a function that will mimic a database query and return JSON object
+}
+setTimeout(() => {
+    parseGameMoves();
+}, 1000);
 
-// function parseGameMoves() {
-//     let moves = [];
-//     let eval = [];
-//     let nextISMove = false;
-//     // TODO: Write a function that will convert the game move string into an array of sequential moves.
-//     let splitMoves = classicalGames[2].GameMoves.split(' ');
-//     let inParenthesis = false;
-//     for(let i = 0; i < splitMoves.length; i++) {
-//         if (!inParenthesis) {
-//             if (splitMoves[i] === '{') {
-//                 inParenthesis = true;
-//             } else {
-//                 moves.push(splitMoves[i]);
-//             }
-//         } else {
-//             if (splitMoves[i] === '}') {
-//                 inParenthesis = false;
-//             } else {
-//                 eval.push(splitMoves[i]);
-//             }
-//         }
-//     }
-//     console.log(moves);
-//     console.log(eval);
-//     let movesObjects = [];
-//     for(let i = 0; i < moves.length; i+=2) {
-//         const num = moves[i];
-//         const move = moves[i+1];
-//         movesObjects[num] = move;
-//     }
-//     console.log(movesObjects);
-// }
+function parseGameMoves(gameString) {
+    let moves = [];
+    // TODO: Write a function that will convert the game move string into an array of sequential moves.
+    let splitMoves = gameString.split(' ');
+    let inParenthesis = false;
+    for(let i = 0; i < splitMoves.length; i++) {
+        if (!inParenthesis) {
+            if (splitMoves[i] === '{') {
+                inParenthesis = true;
+            } else {
+                moves.push(splitMoves[i]);
+            }
+        } else {
+            if (splitMoves[i] === '}') {
+                inParenthesis = false;
+            } 
+        }
+    }
+
+    let movesObjects = [];
+    for(let i = 0; i < moves.length; i+=2) {
+        const num = moves[i];
+        const move = moves[i+1];
+        movesObjects[num] = move;
+    }
+    return movesObjects;
+}
 
