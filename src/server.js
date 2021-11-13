@@ -8,10 +8,10 @@ const fs = require('fs');
 app.use(cors());
 app.use(
     express.urlencoded({
-       extended: true
+        extended: true
     })
- )
- app.use(express.json())
+)
+app.use(express.json())
 app.use(express.static('./public'));
 
 const PORT = process.env.PORT || 4040;
@@ -22,19 +22,19 @@ app.listen(PORT, () => {
 
 app.post('/', function (req, res) {
     res.set({
-       "Content-Type": "application/json",
-       "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
     });
     const data = postHandler(req.body);
     res.end(JSON.stringify(data));
- });
+});
 
 const openingsList = [];
 const classicalGames = [];
 
 
 function postHandler(postMessage) {
-    switch(postMessage.request) {
+    switch (postMessage.request) {
         case 'Get All Game Data':
             return classicalGames;
         case 'Get All Openings':
@@ -235,13 +235,35 @@ function cleanGameMovesInJsonFiles(callback) {
             }
             const list = JSON.parse(data);
             Object.values(list).forEach(object => {
-                if  (object.GameMoves) {
-                    const array = parseGameMoves(object.GameMoves);
-                    object.GameMoves = array;
-                    console.log(object.GameMoves);
+                if (object.GameMoves) {
+                    let moves = [];
+                    // TODO: Write a function that will convert the game move string into an array of sequential moves.
+                    let splitMoves = gameString.split(' ');
+                    let inParenthesis = false;
+                    for (let i = 0; i < splitMoves.length; i++) {
+                        if (!inParenthesis) {
+                            if (splitMoves[i] === '{') {
+                                inParenthesis = true;
+                            } else {
+                                moves.push(splitMoves[i]);
+                            }
+                        } else {
+                            if (splitMoves[i] === '}') {
+                                inParenthesis = false;
+                            }
+                        }
+                    }
+
+                    let movesObjects = [];
+                    for (let i = 0; i < moves.length; i += 2) {
+                        const num = moves[i];
+                        const move = moves[i + 1];
+                        movesObjects[num] = move;
+                    }
+                    object.GameMoves = movesObjects;
                 }
             });
-            //callback(filename, list);
+            callback(filename, list);
             count++;
             console.log(count);
         });
@@ -256,7 +278,7 @@ function parseGameMoves(gameString) {
     // TODO: Write a function that will convert the game move string into an array of sequential moves.
     let splitMoves = gameString.split(' ');
     let inParenthesis = false;
-    for(let i = 0; i < splitMoves.length; i++) {
+    for (let i = 0; i < splitMoves.length; i++) {
         if (!inParenthesis) {
             if (splitMoves[i] === '{') {
                 inParenthesis = true;
@@ -266,14 +288,14 @@ function parseGameMoves(gameString) {
         } else {
             if (splitMoves[i] === '}') {
                 inParenthesis = false;
-            } 
+            }
         }
     }
 
     let movesObjects = [];
-    for(let i = 0; i < moves.length; i+=2) {
+    for (let i = 0; i < moves.length; i += 2) {
         const num = moves[i];
-        const move = moves[i+1];
+        const move = moves[i + 1];
         movesObjects[num] = move;
     }
     return movesObjects;
