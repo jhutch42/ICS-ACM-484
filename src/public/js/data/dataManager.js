@@ -8,10 +8,6 @@ export default class DataManager {
         this.subscriber = subscriber;
         this.subscriber.setCallbackFunction(this.messageHandler);
         this.#WebWorkerManager = webWorkerManager;
-
-        // This function will return all games that the server allows( currently around 220,000)
-        //this.#WebWorkerManager.getData({ request: "Get All Game Data" });
-
     };
 
     /**
@@ -21,5 +17,10 @@ export default class DataManager {
     messageHandler = message => {
         const from = message.from;
         const body = message.body;
+    }
+
+    getAllGameData() {
+        // This function will return all games that the server allows( currently around 220,000)
+        this.#WebWorkerManager.getData({ request: "Get All Game Data" });
     }
 }
