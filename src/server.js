@@ -236,11 +236,12 @@ function cleanGameMovesInJsonFiles(callback) {
             const list = JSON.parse(data);
             Object.values(list).forEach(object => {
                 if  (object.GameMoves) {
-                    object.GameMoves = parseGameMoves(object.GameMoves);
+                    const array = parseGameMoves(object.GameMoves);
+                    object.GameMoves = array;
                     console.log(object.GameMoves);
                 }
             });
-            callback(filename, list);
+            //callback(filename, list);
             count++;
             console.log(count);
         });
@@ -275,7 +276,6 @@ function parseGameMoves(gameString) {
         const move = moves[i+1];
         movesObjects[num] = move;
     }
-    console.log(movesObjects);
     return movesObjects;
 }
 
