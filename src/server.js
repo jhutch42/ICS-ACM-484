@@ -58,32 +58,43 @@ function postHandler(postMessage) {
 //     callback(data);
 // }
 
-//processLineByLine(parseCSV);
+processLineByLine(parseCSV);
 // createOpeningsJSONFile(checkForCompletion);
 
-// function parseCSV(dataArray) {
-//     let headerArray = dataArray[0].split(',');
-//     const breaks = [];
-//     for (let i = 0; i < 620000; i += 20000) {
-//         breaks.push(i);
-//     }
-//     for (let k = 0; k < breaks.length - 1; k++) {
-//         const jsonData = [];
-//         for (let i = breaks[k]; i < breaks[k + 1]; i++) {
-//             let jsonObject = {};
-//             const lineArray = dataArray[i].split(',');
-//             for (let j = 0; j < headerArray.length; j++) {
-//                 jsonObject[headerArray[j]] = lineArray[j];
-//             }
+const headerArray = ['Event', 'Site', 'Date', 'Round', 'White', 'Black', 'Result', 'UTCDate', 'UTCTime', 
+'WhiteElo', 'BlackElo', 'ECO', 'Opening', 'TimeControl', 'Termination', 'GameMoves', 'WhiteRatingDiff', 
+'BlackRatingDiff', 'BlackTitle', 'WhiteTitle'];
+function parseCSV(dataArray) {
 
-//             if (jsonObject.Termination !== 'Abandoned' && jsonObject.Termination !== 'Rules infraction' && jsonObject.Termination !== 'Time forfeit') jsonData.push(jsonObject);
-//             if (i % 50000 === 0) console.log(i);
-//         }
-//         fs.writeFile('chessDataFiles/ratedClassicalGame_' + k + '.json', JSON.stringify(jsonData), (error, result) => {
-//             if (error) console.log(error);
-//         });
-//     }
-// }
+    const breaks = [];
+    for (let i = 0; i < 620000; i += 20000) {
+        breaks.push(i);
+    }
+    for (let k = 0; k < breaks.length - 1; k++) {
+        const jsonData = [];
+        for (let i = breaks[k]; i < breaks[k + 1]; i++) {
+            let jsonObject = {};
+            const lineArray = dataArray[i].split(',');
+            for (let j = 0; j < headerArray.length; j++) {
+                if (j === 2) {
+                    lineArray[2] = lineArray[2].replace("Jan-00", "1-0");
+                } else if (j === 12) {
+                    lineArray[12] = lineArray[12].replace("\\", "");
+                    lineArray[12] = lineArray[12].replace("\"", "");
+                } else if (j === 15) {
+                    lineArray[15] = parseGameMoves(lineArray[15]);
+                }
+                    jsonObject[headerArray[j]] = lineArray[j];
+            }
+
+            jsonData.push(jsonObject);
+            if (i % 50000 === 0) console.log(i);
+        }
+        fs.writeFile('chessDataFiles/ratedClassicalGame_' + k + '.json', JSON.stringify(jsonData), (error, result) => {
+            if (error) console.log(error);
+        });
+    }
+}
 
 // function cleanOpeningsInJsonFiles(callback) {
 //     for (let i = 0; i < 30; i++) {
