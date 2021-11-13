@@ -41,7 +41,7 @@ export default class WebWorkerManager {
     }
 
     #addWorkerToDataTable(worker, id) {
-        this.#workerHashTable.set(id, { worker: worker, stopFunction: this.#stopWorker, handleReturnFunction: this.#handleReturn});
+        this.#workerHashTable.set(id, { worker: worker, stopFunction: this.#stopWorker, handleReturnFunction: undefined});
     }
 
     #stopWorker(id) {

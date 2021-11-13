@@ -29,15 +29,13 @@ this.onmessage = e => {
             postMessage('ID Set Successfully');
             break;
         case 'Get Data':
-            postData(url, {request:'Get All Game Data'}).then(data => {handleReturn(data)});
-            postMessage({ type: 'Return With Data', data: [1, 2, 3, 4, 5], id: id});
+            postData(url, {request:'Get All Game Data'}).then(data => {handleReturn('Return With Data', data)});
             break;
     }
 }
 
-const handleReturn = data => {
-    console.log('Data Returned');
-    console.log(data);
+const handleReturn = (messaage, data) => {
+    postMessage({message: message, data: data, id: id});
 }
 
 function setId(newId) {

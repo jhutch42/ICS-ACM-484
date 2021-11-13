@@ -129,6 +129,31 @@ function postHandler(postMessage) {
 //     }
 // }
 
+cleanResultInJsonFiles(writeFile);
+
+function cleanResultInJsonFiles(callback) {
+    for (let i = 0; i < 30; i++) {
+
+        const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+        fs.readFile(filename, 'utf8', (error, data) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const list = JSON.parse(data);
+            Object.values(list).forEach(object => {
+                if  (object.Result) {
+                    object.Opening = object.Opening.replace("Jan-00", "1-0");
+                }
+            });
+            callback(filename, list);
+        });
+    }
+}
+
+const openings = [];
+
+
 // let count = 0;
 // function checkForCompletion () {
 //     count++;
@@ -152,11 +177,11 @@ function postHandler(postMessage) {
 //     });
 // }
 
-// function writeFile(filename, object) {
-//     fs.writeFile(filename, JSON.stringify(object), (error, result) => {
-//         if (error) console.log(error);
-//     });
-// }
+function writeFile(filename, object) {
+    fs.writeFile(filename, JSON.stringify(object), (error, result) => {
+        if (error) console.log(error);
+    });
+}
 let count = 0;
 function loadAllData(n) {
     for (let i = 0; i < n; i++) {
@@ -189,4 +214,45 @@ function loadAllData(n) {
     });
 }
 
-loadAllData(12);
+// loadAllData(1);
+
+// function getDataWithFilters(object) {
+//     // TODO: Write a function that will mimic a database query and return JSON object
+// }
+// setTimeout(() => {
+//     parseGameMoves();
+// }, 1000);
+
+// function parseGameMoves() {
+//     let moves = [];
+//     let eval = [];
+//     let nextISMove = false;
+//     // TODO: Write a function that will convert the game move string into an array of sequential moves.
+//     let splitMoves = classicalGames[2].GameMoves.split(' ');
+//     let inParenthesis = false;
+//     for(let i = 0; i < splitMoves.length; i++) {
+//         if (!inParenthesis) {
+//             if (splitMoves[i] === '{') {
+//                 inParenthesis = true;
+//             } else {
+//                 moves.push(splitMoves[i]);
+//             }
+//         } else {
+//             if (splitMoves[i] === '}') {
+//                 inParenthesis = false;
+//             } else {
+//                 eval.push(splitMoves[i]);
+//             }
+//         }
+//     }
+//     console.log(moves);
+//     console.log(eval);
+//     let movesObjects = [];
+//     for(let i = 0; i < moves.length; i+=2) {
+//         const num = moves[i];
+//         const move = moves[i+1];
+//         movesObjects[num] = move;
+//     }
+//     console.log(movesObjects);
+// }
+
