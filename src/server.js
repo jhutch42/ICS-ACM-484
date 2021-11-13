@@ -41,6 +41,8 @@ function postHandler(postMessage) {
             return openingsList;
     }
 }
+
+const data = [];
 // async function processLineByLine(callback) {
 //     const fileStream = fs.createReadStream('chessDataFiles/ratedClassicalGame.csv');
 
@@ -58,43 +60,34 @@ function postHandler(postMessage) {
 //     callback(data);
 // }
 
-processLineByLine(parseCSV);
+// processLineByLine(parseCSV);
 // createOpeningsJSONFile(checkForCompletion);
 
-const headerArray = ['Event', 'Site', 'Date', 'Round', 'White', 'Black', 'Result', 'UTCDate', 'UTCTime', 
-'WhiteElo', 'BlackElo', 'ECO', 'Opening', 'TimeControl', 'Termination', 'GameMoves', 'WhiteRatingDiff', 
-'BlackRatingDiff', 'BlackTitle', 'WhiteTitle'];
-function parseCSV(dataArray) {
+// const headerArray = ['Event', 'Site', 'Date', 'Round', 'White', 'Black', 'Result', 'UTCDate', 'UTCTime',
+//     'WhiteElo', 'BlackElo', 'ECO', 'Opening', 'TimeControl', 'Termination', 'GameMoves', 'WhiteRatingDiff',
+//     'BlackRatingDiff', 'BlackTitle', 'WhiteTitle'];
+// function parseCSV(dataArray) {
+//     const breaks = [];
+//     for (let i = 0; i < 620000; i += 20000) {
+//         breaks.push(i);
+//     }
+//     for (let k = 0; k < breaks.length - 1; k++) {
+//         const jsonData = [];
+//         for (let i = breaks[k]; i < breaks[k + 1]; i++) {
+//             let jsonObject = {};
+//             const lineArray = dataArray[i].split(',');
+//             for (let j = 0; j < headerArray.length; j++) {
+//                 jsonObject[headerArray[j]] = lineArray[j];
+//             }
 
-    const breaks = [];
-    for (let i = 0; i < 620000; i += 20000) {
-        breaks.push(i);
-    }
-    for (let k = 0; k < breaks.length - 1; k++) {
-        const jsonData = [];
-        for (let i = breaks[k]; i < breaks[k + 1]; i++) {
-            let jsonObject = {};
-            const lineArray = dataArray[i].split(',');
-            for (let j = 0; j < headerArray.length; j++) {
-                if (j === 2) {
-                    lineArray[2] = lineArray[2].replace("Jan-00", "1-0");
-                } else if (j === 12) {
-                    lineArray[12] = lineArray[12].replace("\\", "");
-                    lineArray[12] = lineArray[12].replace("\"", "");
-                } else if (j === 15) {
-                    lineArray[15] = parseGameMoves(lineArray[15]);
-                }
-                    jsonObject[headerArray[j]] = lineArray[j];
-            }
-
-            jsonData.push(jsonObject);
-            if (i % 50000 === 0) console.log(i);
-        }
-        fs.writeFile('chessDataFiles/ratedClassicalGame_' + k + '.json', JSON.stringify(jsonData), (error, result) => {
-            if (error) console.log(error);
-        });
-    }
-}
+//             jsonData.push(jsonObject);
+//             if (i % 50000 === 0) console.log(i);
+//         }
+//         fs.writeFile('chessDataFiles/ratedClassicalGame_' + k + '.json', JSON.stringify(jsonData), (error, result) => {
+//             if (error) console.log(error);
+//         });
+//     }
+// }
 
 // function cleanOpeningsInJsonFiles(callback) {
 //     for (let i = 0; i < 30; i++) {
@@ -188,44 +181,57 @@ function parseCSV(dataArray) {
 //     });
 // }
 
-function writeFile(filename, object) {
-    fs.writeFile(filename, JSON.stringify(object), (error, result) => {
-        if (error) console.log(error);
-    });
-}
-let count = 0;
-// function loadAllData(n) {
-//     for (let i = 0; i < n; i++) {
-//         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
-//         fs.readFile(filename, 'utf8', (error, data) => {
-//             if (error) {
-//                 console.log(error);
-//                 return;
-//             }
-//             const list = JSON.parse(data);
-//             Object.values(list).forEach(object => {
-//                 classicalGames.push(object);
-//             });
-//             count++;
-//             if (count === n) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
-//             else console.log(`${count} files loaded`);
-//         });
-
-//     }
-//     fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
-//         if (error) {
-//             console.log(error);
-//             return;
-//         }
-//         const list = JSON.parse(data);
-//         Object.values(list).forEach(object => {
-//             openingsList.push(object);
-//         });
-//         console.log(`Openings Data Loaded. ${openingsList.length} openings`);
+// function writeFile(filename, object) {
+//     fs.writeFile(filename, JSON.stringify(object), (error, result) => {
+//         if (error) console.log(error);
 //     });
 // }
+let count = 0;
+function loadAllData(n) {
+    for (let i = 0; i < n; i++) {
+        const filename = `chessDataFiles/ratedClassicalGame_${i}.json`;
+        fs.readFile(filename, 'utf8', (error, data) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            const list = JSON.parse(data);
+            Object.values(list).forEach(object => {
+                classicalGames.push(object);
+            });
+            count++;
+            if (count === n) {
+                console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
+                console.log('Cleaning Data');
+                classicalGames.forEach(game => {
+                    game.Opening = game.Opening.replace("\\", "");
+                    game.Opening = game.Opening.replace("\"", "");
+                    game.GameMoves = parseGameMoves(game.GameMoves);
+                    game.Result = game.Result.replace('Jan-00', '1-0');
+                });
+                console.log('Done Cleaning Data');
+                // for(let i = 0; i < 20; i++) {
+                //     console.log(classicalGames[i]);
+                // }
+            }
+            else console.log(`${count} files loaded`);
+        });
 
-// loadAllData(1);
+    }
+    fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        const list = JSON.parse(data);
+        Object.values(list).forEach(object => {
+            openingsList.push(object);
+        });
+        console.log(`Openings Data Loaded. ${openingsList.length} openings`);
+    });
+}
+
+loadAllData(12);
 
 // function getDataWithFilters(object) {
 //     // TODO: Write a function that will mimic a database query and return JSON object
@@ -234,52 +240,52 @@ let count = 0;
 //     parseGameMoves();
 // }, 1000);
 
-cleanGameMovesInJsonFiles(writeFile);
-function cleanGameMovesInJsonFiles(callback) {
-    for (let i = 0; i < 30; i++) {
+// cleanGameMovesInJsonFiles(writeFile);
+// function cleanGameMovesInJsonFiles(callback) {
+//     for (let i = 0; i < 30; i++) {
 
-        const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
-        fs.readFile(filename, 'utf8', (error, data) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            const list = JSON.parse(data);
-            Object.values(list).forEach(object => {
-                if (object.GameMoves) {
-                    let moves = [];
-                    // TODO: Write a function that will convert the game move string into an array of sequential moves.
-                    let splitMoves = gameString.split(' ');
-                    let inParenthesis = false;
-                    for (let i = 0; i < splitMoves.length; i++) {
-                        if (!inParenthesis) {
-                            if (splitMoves[i] === '{') {
-                                inParenthesis = true;
-                            } else {
-                                moves.push(splitMoves[i]);
-                            }
-                        } else {
-                            if (splitMoves[i] === '}') {
-                                inParenthesis = false;
-                            }
-                        }
-                    }
+//         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+//         fs.readFile(filename, 'utf8', (error, data) => {
+//             if (error) {
+//                 console.log(error);
+//                 return;
+//             }
+//             const list = JSON.parse(data);
+//             Object.values(list).forEach(object => {
+//                 if (object.GameMoves) {
+//                     let moves = [];
+//                     // TODO: Write a function that will convert the game move string into an array of sequential moves.
+//                     let splitMoves = gameString.split(' ');
+//                     let inParenthesis = false;
+//                     for (let i = 0; i < splitMoves.length; i++) {
+//                         if (!inParenthesis) {
+//                             if (splitMoves[i] === '{') {
+//                                 inParenthesis = true;
+//                             } else {
+//                                 moves.push(splitMoves[i]);
+//                             }
+//                         } else {
+//                             if (splitMoves[i] === '}') {
+//                                 inParenthesis = false;
+//                             }
+//                         }
+//                     }
 
-                    let movesObjects = [];
-                    for (let i = 0; i < moves.length; i += 2) {
-                        const num = moves[i];
-                        const move = moves[i + 1];
-                        movesObjects[num] = move;
-                    }
-                    object.GameMoves = movesObjects;
-                }
-            });
-            callback(filename, list);
-            count++;
-            console.log(count);
-        });
-    }
-}
+//                     let movesObjects = [];
+//                     for (let i = 0; i < moves.length; i += 2) {
+//                         const num = moves[i];
+//                         const move = moves[i + 1];
+//                         movesObjects[num] = move;
+//                     }
+//                     object.GameMoves = movesObjects;
+//                 }
+//             });
+//             callback(filename, list);
+//             count++;
+//             console.log(count);
+//         });
+//     }
+// }
 
 // const openings = [];
 
