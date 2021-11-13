@@ -183,8 +183,50 @@ function writeFile(filename, object) {
     });
 }
 let count = 0;
-function loadAllData(n) {
-    for (let i = 0; i < n; i++) {
+// function loadAllData(n) {
+//     for (let i = 0; i < n; i++) {
+//         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
+//         fs.readFile(filename, 'utf8', (error, data) => {
+//             if (error) {
+//                 console.log(error);
+//                 return;
+//             }
+//             const list = JSON.parse(data);
+//             Object.values(list).forEach(object => {
+//                 classicalGames.push(object);
+//             });
+//             count++;
+//             if (count === n) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
+//             else console.log(`${count} files loaded`);
+//         });
+
+//     }
+//     fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
+//         if (error) {
+//             console.log(error);
+//             return;
+//         }
+//         const list = JSON.parse(data);
+//         Object.values(list).forEach(object => {
+//             openingsList.push(object);
+//         });
+//         console.log(`Openings Data Loaded. ${openingsList.length} openings`);
+//     });
+// }
+
+// loadAllData(1);
+
+// function getDataWithFilters(object) {
+//     // TODO: Write a function that will mimic a database query and return JSON object
+// }
+// setTimeout(() => {
+//     parseGameMoves();
+// }, 1000);
+
+cleanGameMovesInJsonFiles(writeFile);
+function cleanGameMovesInJsonFiles(callback) {
+    for (let i = 0; i < 30; i++) {
+
         const filename = `chessDataFiles/ratedCLassicalGame_${i}.json`;
         fs.readFile(filename, 'utf8', (error, data) => {
             if (error) {
@@ -193,35 +235,20 @@ function loadAllData(n) {
             }
             const list = JSON.parse(data);
             Object.values(list).forEach(object => {
-                classicalGames.push(object);
+                if  (object.GameMoves) {
+                    object.GameMoves = parseGameMoves(object.GameMoves);
+                    console.log(object.GameMoves);
+                }
             });
+            callback(filename, list);
             count++;
-            if (count === n) console.log('All Game Data Loaded. ' + classicalGames.length + ' games.');
-            else console.log(`${count} files loaded`);
+            console.log(count);
         });
-
     }
-    fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
-        if (error) {
-            console.log(error);
-            return;
-        }
-        const list = JSON.parse(data);
-        Object.values(list).forEach(object => {
-            openingsList.push(object);
-        });
-        console.log(`Openings Data Loaded. ${openingsList.length} openings`);
-    });
 }
 
-loadAllData(1);
+// const openings = [];
 
-function getDataWithFilters(object) {
-    // TODO: Write a function that will mimic a database query and return JSON object
-}
-setTimeout(() => {
-    parseGameMoves();
-}, 1000);
 
 function parseGameMoves(gameString) {
     let moves = [];
@@ -248,6 +275,7 @@ function parseGameMoves(gameString) {
         const move = moves[i+1];
         movesObjects[num] = move;
     }
+    console.log(movesObjects);
     return movesObjects;
 }
 
