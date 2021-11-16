@@ -29,23 +29,31 @@ this.onmessage = e => {
             postMessage('ID Set Successfully');
             break;
         case 'Get Data':
-            postData(url, {request:e.data.instructions.request}).then(data => {handleReturn('Return With Data', data)});
+            postData(url, { request: e.data.instructions.request }).then(data => { handleReturn('Return With Data', data) });
+            break;
+        case 'Sort Data':
+            postMessage({message: 'Return With Sorted Data', data: sortDataByField(e.data.instructions.data, e.data.instructions.field), id: id});
             break;
     }
 }
 
 const handleReturn = (message, data) => {
-    switch(data.request) {
+    switch (data.request) {
         case 'Is Data Ready':
-            if (data.data === false) postData(url, {request: 'Is Data Ready'}).then(data => {handleReturn('Return With Data', data)});
-            else postMessage({message: message, data: data, id: id});
+            if (data.data === false) postData(url, { request: 'Is Data Ready' }).then(data => { handleReturn('Return With Data', data) });
+            else postMessage({ message: message, data: data, id: id });
             break;
         case 'Get All Game Data':
-            postMessage({message: message, data: data, id: id});
+            postMessage({ message: message, data: data, id: id });
             break;
     }
 }
 
 function setId(newId) {
     id = newId;
+}
+
+function sortDataByField(data, field) {
+    data.sort((a, b) => a[field] - b[field]);
+    return data;
 }

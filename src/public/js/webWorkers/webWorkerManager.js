@@ -4,18 +4,36 @@ export default class WebWorkerManager {
     #workerQueue;
     publisher;
 
-    constructor(publisher) {
+    /**
+     * @param {Publisher Object} publisher 
+     * @param {number} sizeOfWorkerPool 
+     */
+    constructor(publisher, sizeOfWorkerPool) {
+        console.log(sizeOfWorkerPool);
         this.publisher = publisher;
         this.#workerIdIndex = -1;
         this.#workerHashTable = new Map();
         this.#workerQueue = [];
-        this.#createWorkerPool(3);
+        this.#createWorkerPool(sizeOfWorkerPool);  // Create an initial pool of web workers.
     };
 
+    /** Gets Data from the server
+     * @param {{request: string}} instruction ie. 'Get All Game Data'
+     */
     getData(instructions) {
         if (this.#workerQueue.length > 0) {
             const worker = this.#dequeueWorker();
             worker.postMessage({type: 'Get Data', instructions: instructions});
+        }
+    }
+
+    /**
+     * Sorts a dataset by a field, like White (white username) or WhiteElo (white's rankings).
+     * @param {object {request: string, data: (dataobject), sortField: string}} instructions
+     */
+    sortDataByField(instructions) {
+        if (this.#workerQueue.length > 0) {
+            this.#dequeueWorker().postMessage({type: 'Sort Data', instructions});
         }
     }
 
@@ -59,7 +77,9 @@ export default class WebWorkerManager {
 
     #setWorkerMessageHandler(id) {
         this.#workerHashTable.get(id).worker.onmessage = (event, id) => {
+            console.log(event);
             if (event.data.message === 'Return With Data') this.#handleReturn(event.data.data, event.data.id);
+            else if(event.data.message === 'Return With Sorted Data') this.#handleReturn(event.data.data, event.data.id);
             else console.log(event.data);
         }
     }

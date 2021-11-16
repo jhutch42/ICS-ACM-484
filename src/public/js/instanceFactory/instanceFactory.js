@@ -19,7 +19,7 @@ export default class InstanceFactory {
     createDataManager() {
         if (this.#numberOfDataManagers === 0) {
             this.#numberOfDataManagers++;
-            return new DataManager(this.#createPublisher(), this.#createSubscriber(), this.#createWebWorkerManager());
+            return new DataManager(this.#createPublisher(), this.#createSubscriber(), this.#createWebWorkerManager(3));
         } 
         else console.log('Only 1 DataManager is allowed.');
         return undefined;
@@ -29,10 +29,10 @@ export default class InstanceFactory {
      * Create A singleton Web Worker Manager.
      * @returns a new Web Worker Manager object
      */
-    #createWebWorkerManager() {
+    #createWebWorkerManager(sizeOfWorkerPool) {
         if (this.#numberOfWebWorkerManagers === 0) {
             this.#numberOfWebWorkerManagers++;
-            return new WebWorkerManager(this.#createPublisher());
+            return new WebWorkerManager(this.#createPublisher(), sizeOfWorkerPool);
         } 
         else console.log('Only 1 WebWorkerManager is allowed.');
         return undefined;

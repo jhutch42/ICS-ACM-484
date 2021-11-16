@@ -34,6 +34,7 @@ const classicalGames = [];
 let dataIsSet = false;
 
 function postHandler(postMessage) {
+    console.log(postMessage);
     switch (postMessage.request) {
         case 'Get All Game Data':
             return {request: postMessage.request, data: classicalGames};
@@ -212,12 +213,13 @@ function loadAllData(n) {
                     game.Result = game.Result.replace('Jan-00', '1-0');
                 });
                 console.log('Done Cleaning Data');
-                for(let i = 0; i < 20; i++) {
-                    console.log(classicalGames[i]);
-                }
-                setTimeout(() =>{
+                classicalGames.shift();
+                // for(let i = 0; i < 20; i++) {
+                //     console.log(classicalGames[i]);
+                // }
+                // setTimeout(() =>{
                     dataIsSet = true;
-                }, 500);
+                // }, 500);
             }
             else console.log(`${count} files loaded`);
         });

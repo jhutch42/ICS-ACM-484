@@ -32,6 +32,13 @@ export default class DataManager {
             case 'Get All Game Data':
                 this.gameData = body.data;
                 console.log('Game Data is Set... ' + this.gameData.length + ' games');
+                this.#printDataHead(3);
+                this.sortData('WhiteElo');
+                break;
+            case 'Sort Data By Field':
+                this.gameData = body.data;
+                console.log('Sorted Data Returned from Web Worker');
+                this.#printDataHead(3);
                 break;
         }
     }
@@ -43,6 +50,17 @@ export default class DataManager {
     }
 
     #checkDataAvailability() {
-        this.#WebWorkerManager.getData({request: "Is Data Ready"});
+        this.#WebWorkerManager.getData({ request: "Is Data Ready" });
+    }
+
+    sortData(field) {
+        if (this.gameData) this.#WebWorkerManager.sortDataByField({request: 'Sort Data By Field', data: this.gameData, field: field});
+        else console.log('No Data On Client.');
+    }
+
+    #printDataHead(numberOfRows) {
+        for (let i = 0; i < numberOfRows; i++) {
+            console.log(this.gameData[i]);
+        }
     }
 }
