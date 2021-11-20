@@ -31,6 +31,7 @@ app.post('/', function (req, res) {
 
 const openingsList = [];
 const classicalGames = [];
+const classicalGamesMap = new Map();
 let dataIsSet = false;
 
 function postHandler(postMessage) {
@@ -212,13 +213,9 @@ function loadAllData(n) {
                     game.GameMoves = parseGameMoves(game.GameMoves);
                     game.Result = game.Result.replace('Jan-00', '1-0');
                 });
-                console.log('Done Cleaning Data');
                 classicalGames.shift();
-                // for(let i = 0; i < 20; i++) {
-                //     console.log(classicalGames[i]);
-                // }
-                // setTimeout(() =>{
-                    dataIsSet = true;
+                console.log('Done Cleaning Data');
+                dataIsSet = true;
                 // }, 500);
             }
             else console.log(`${count} files loaded`);

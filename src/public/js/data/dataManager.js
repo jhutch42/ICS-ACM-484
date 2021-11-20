@@ -4,6 +4,7 @@ export default class DataManager {
     #WebWorkerManager;
     #dataIsReady;
     gameData;
+    #playerRankMapping;
 
     constructor(publisher, subscriber, webWorkerManager) {
         this.#dataIsReady = false;
@@ -13,6 +14,7 @@ export default class DataManager {
         this.#WebWorkerManager = webWorkerManager;
         this.#WebWorkerManager.publisher.subscribe(this.messageHandler);
         this.#checkDataAvailability();
+        this.#playerRankMapping = new Map();
     };
 
     /**
@@ -32,13 +34,13 @@ export default class DataManager {
             case 'Get All Game Data':
                 this.gameData = body.data;
                 console.log('Game Data is Set... ' + this.gameData.length + ' games');
-                this.#printDataHead(3);
-                this.sortData('WhiteElo');
+                this.#printDataHead(2);
+                this.publisher.publishMessage({from: 'dataManager', body: {message: 'All Games Loaded', data: this.gameData.length}});
                 break;
             case 'Sort Data By Field':
                 this.gameData = body.data;
                 console.log('Sorted Data Returned from Web Worker');
-                this.#printDataHead(3);
+                this.#printDataHead(2);
                 break;
         }
     }
@@ -54,8 +56,38 @@ export default class DataManager {
     }
 
     sortData(field) {
-        if (this.gameData) this.#WebWorkerManager.sortDataByField({request: 'Sort Data By Field', data: this.gameData, field: field});
+        if (this.gameData) this.#WebWorkerManager.sortDataByField({ request: 'Sort Data By Field', data: this.gameData, field: field });
         else console.log('No Data On Client.');
+    }
+
+    getRankingHistogramData(breakPoint) {
+        const data = { x: [], y: [] };
+        for (let i = 0; i < 3500; i += breakPoint) {
+            data.x.push(i);
+        }
+    }
+
+    createPlayerRankMapping() {
+        if (this.#dataIsReady) {
+            this.gameData.forEach(game => {
+                if (!this.#playerRankMapping.has(game.Black)) this.#playerRankMapping.set(game.Black, { rankingArray: [], rankingAverage: 0 });
+                this.#playerRankMapping.get(game.Black).rankingArray.push(parseInt(game.BlackElo));
+                if (!this.#playerRankMapping.has(game.White)) this.#playerRankMapping.set(game.White, { rankingArray: [], rankingAverage: 0 });
+                this.#playerRankMapping.get(game.White).rankingArray.push(parseInt(game.WhiteElo));
+            });
+            this.#playerRankMapping.forEach(entry => {
+                entry.rankingAverage = parseInt(this.#getAverageOfArray(entry.rankingArray));
+            });
+        }
+    }
+
+    #getAverageOfArray(array) {
+        if (array.length > 0) {
+            let sum = 0;
+            array.forEach(element => sum += element);
+            return sum / array.length;
+        } else return -1;
+
     }
 
     #printDataHead(numberOfRows) {
@@ -63,4 +95,6 @@ export default class DataManager {
             console.log(this.gameData[i]);
         }
     }
+
+
 }

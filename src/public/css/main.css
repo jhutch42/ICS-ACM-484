@@ -3,7 +3,14 @@
     --main-background-color: black;
     --main-text-color: white;
 }
+
+@font-face {
+    font-family: "Sora";
+    src: url("../fonts/Sora-VariableFont_wght.ttf");
+  }
+
 body {
     background-color: var(--main-background-color);
     color: var(--main-text-color);
+    font-family: "Sora", Fallback, sans-serif;
 }
