@@ -8,6 +8,7 @@ export class DomManager {
         this.subscriber.setCallbackFunction(this.messageHandler);
         this.#elementHashTable.set('loadingDiv', document.querySelector('#loadingDiv'));
         this.#elementHashTable.set('uniquePlayersDiv', document.querySelector('#uniquePlayersDiv'));
+        this.#elementHashTable.set('uniquePlayersChartDiv', document.querySelector('#uniquePlayersChartDiv'));
     };
 
     #updateText(elementKey, text) {

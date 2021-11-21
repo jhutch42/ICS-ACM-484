@@ -1,39 +1,18 @@
 export class ChartBuilder {
-    #chartStagingArea;
 
     constructor(publisher, subscriber) {
-        this.#chartStagingArea = new Map();
+        this.chartStagingArea = new Map();
         this.publisher = publisher;
         this.subscriber = subscriber;
-        this.subscriber.setCallbackFunction(this.messageHandler);
-        this.messageHandler.bind(this);
     };
 
-    drawEChart(data, type, div, theme) {
-
+    drawEChart(div, options, theme) {
         const myChart = echarts.init(div, theme);
-        const option = {
-            xAxis: {
-                type: 'value',
-                data: data.data.x
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    data: data.data.y,
-                    type: type
-                }
-            ]
-        };
-
-        option && myChart.setOption(option);
+        options && myChart.setOption(options);
         return myChart;
     };
 
     messageHandler(message) {
-        console.log(this);
         switch (message.from) {
             case 'dataManager':
                 if (message.body) this.#handleDataManagerMessage(message.body);
@@ -41,10 +20,9 @@ export class ChartBuilder {
         }
     }
 
-    #handleDataManagerMessage(messsageBody) {
-        console.log('test');
+    #handleDataManagerMessage(messageBody) {
         if (messageBody.message) {
-            switch (messsageBody.message) {
+            switch (messageBody.message) {
                 case 'Player Ranking Histogram Data':
                     this.#createPlayerRankingHistogram(messageBody.data);
                     break;
@@ -53,30 +31,49 @@ export class ChartBuilder {
     }
 
     #createPlayerRankingHistogram(data) {
-        this.#chartStagingArea.set('uniquePlayersDiv', {
-            divKey: 'uniquePlayersDiv',
+        this.chartStagingArea.set('uniquePlayersChartDiv', {
+            divKey: 'uniquePlayersChartDiv',
             data: data,
-            divElement: undefined,
-            chartType: 'bar',
-            theme: 'dark'
+            divElement: undefined
         });
         this.publisher.publishMessage(
             {
                 from: 'chartBuilder',
                 body: {
                     message: 'Dom Element Request',
-                    divKey: 'uniquePlayersDiv',
-                    callbackFunction: this.processDivReturn
+                    divKey: 'uniquePlayersChartDiv',
+                    callbackFunction: this.processDivReturn.bind(this)
                 }
             }
         );
     }
 
     processDivReturn(divElement, divKey) {
-        if (this.#chartStagingArea.has(divKey)) {
-            chartData = this.#chartStagingArea.get(divKey);
-            this.drawEChart(chartData.data, chartData.chartType, divElement, chartData.theme);
-            this.#chartStagingArea.delete(divKey);
+        if (this.chartStagingArea.has(divKey)) {
+            const chartData = this.chartStagingArea.get(divKey);
+            const options = {
+                xAxis: {
+                    type: 'category',
+                    data: chartData.data.x,
+                    name: 'Player Ranking',
+                    nameLocation: 'middle',
+                    nameGap: 40
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Number Of Players',
+                    nameLocation: 'middle',
+                    nameGap: 40
+                },
+                series: [
+                    {
+                        data: chartData.data.y,
+                        type: 'bar'
+                    }
+                ]
+            };
+            this.chartStagingArea.delete(divKey);
+            this.drawEChart(divElement, options, 'dark');
         }
     }
 }

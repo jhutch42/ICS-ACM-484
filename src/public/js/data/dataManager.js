@@ -35,7 +35,7 @@ export default class DataManager {
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length } });
                 this.createPlayerRankMapping();
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size } });
-                this.#createDataForPlayerRankingHistogram();
+                this.#createDataForPlayerRankingHistogram(100);
                 break;
             case 'Sort Data By Field':
                 this.gameData = body.data;
@@ -75,7 +75,7 @@ export default class DataManager {
     }
 
     #createDataForPlayerRankingHistogram(breakPoint) {
-        data = { x: [], y: [] };
+        const data = { x: [], y: [] };
         for (let i = 0; i < 3500; i += breakPoint) {
             data.x.push(i);
             data.y.push(0);
@@ -86,6 +86,14 @@ export default class DataManager {
             const index = Math.floor(elo / breakPoint);
             data.y[index] += 1;
         });
+
+        let index = data.y.length - 1;
+        while (data.y[index] === 0) {
+            data.y.pop();
+            data.x.pop();
+            index--;
+        }
+
         this.publisher.publishMessage(
             {
                 from: 'dataManager',
