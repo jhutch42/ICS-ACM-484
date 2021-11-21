@@ -24,4 +24,7 @@ export class ChartBuilder {
         return myChart;
     };
 
+    buildHistogramOfPlayerRankings(data) {
+        
+    }
 }

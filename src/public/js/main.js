@@ -8,7 +8,7 @@ const DOMMANAGER = FACTORY.createDomManager(); // Create a Singleton Dom Manager
 DOMMANAGER.subscriber.subscribe(DATAMANAGER.publisher);
 //CHARTBUILDER.drawEChart(DATAMANAGER.getRankingHistogramData(100));
 
-document.addEventListener('keyup', (e) => {
-    console.log('key');
-    if (e.code === 'KeyF')  DATAMANAGER.createPlayerRankMapping();
-  });
+// document.addEventListener('keyup', (e) => {
+//     console.log('key');
+//     if (e.code === 'KeyF')  DATAMANAGER.createPlayerRankMapping();
+//   });

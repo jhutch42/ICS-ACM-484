@@ -70,7 +70,6 @@ export default class WebWorkerManager {
     }
 
     #handleReturn(data, id) {
-        console.log(data);
         this.#enqueueWorker(this.#workerHashTable.get(id).worker);
         this.publisher.publishMessage({from: 'webWorkerManager', body: {message: data.request, data: data.data}});
     }

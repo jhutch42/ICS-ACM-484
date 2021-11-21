@@ -33,9 +33,9 @@ export default class DataManager {
                 break;
             case 'Get All Game Data':
                 this.gameData = body.data;
-                console.log('Game Data is Set... ' + this.gameData.length + ' games');
-                this.#printDataHead(2);
                 this.publisher.publishMessage({from: 'dataManager', body: {message: 'All Games Loaded', data: this.gameData.length}});
+                this.createPlayerRankMapping();
+                this.publisher.publishMessage({from: 'dataManager', body: {message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size}});
                 break;
             case 'Sort Data By Field':
                 this.gameData = body.data;
