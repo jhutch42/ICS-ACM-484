@@ -13,7 +13,6 @@ export default class DataManager {
         this.subscriber.setCallbackFunction(this.messageHandler);
         this.#WebWorkerManager = webWorkerManager;
         this.#WebWorkerManager.publisher.subscribe(this.messageHandler);
-        this.#checkDataAvailability();
         this.#playerRankMapping = new Map();
     };
 
@@ -33,9 +32,10 @@ export default class DataManager {
                 break;
             case 'Get All Game Data':
                 this.gameData = body.data;
-                this.publisher.publishMessage({from: 'dataManager', body: {message: 'All Games Loaded', data: this.gameData.length}});
+                this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length } });
                 this.createPlayerRankMapping();
-                this.publisher.publishMessage({from: 'dataManager', body: {message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size}});
+                this.publisher.publishMessage({ from: 'dataManager', body: { message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size } });
+                this.#createDataForPlayerRankingHistogram();
                 break;
             case 'Sort Data By Field':
                 this.gameData = body.data;
@@ -51,20 +51,13 @@ export default class DataManager {
         else console.log('Data is still loading on the server');
     }
 
-    #checkDataAvailability() {
+    checkDataAvailability() {
         this.#WebWorkerManager.getData({ request: "Is Data Ready" });
     }
 
     sortData(field) {
         if (this.gameData) this.#WebWorkerManager.sortDataByField({ request: 'Sort Data By Field', data: this.gameData, field: field });
         else console.log('No Data On Client.');
-    }
-
-    getRankingHistogramData(breakPoint) {
-        const data = { x: [], y: [] };
-        for (let i = 0; i < 3500; i += breakPoint) {
-            data.x.push(i);
-        }
     }
 
     createPlayerRankMapping() {
@@ -79,6 +72,29 @@ export default class DataManager {
                 entry.rankingAverage = parseInt(this.#getAverageOfArray(entry.rankingArray));
             });
         }
+    }
+
+    #createDataForPlayerRankingHistogram(breakPoint) {
+        data = { x: [], y: [] };
+        for (let i = 0; i < 3500; i += breakPoint) {
+            data.x.push(i);
+            data.y.push(0);
+        }
+
+        this.#playerRankMapping.forEach(entry => {
+            const elo = entry.rankingAverage;
+            const index = Math.floor(elo / breakPoint);
+            data.y[index] += 1;
+        });
+        this.publisher.publishMessage(
+            {
+                from: 'dataManager',
+                body:
+                {
+                    message: 'Player Ranking Histogram Data',
+                    data: data
+                }
+            });
     }
 
     #getAverageOfArray(array) {

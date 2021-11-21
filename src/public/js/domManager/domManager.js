@@ -39,7 +39,7 @@ export class DomManager {
     #handleMessageFromChartBuilder(messageBody) {
         switch (messageBody.message) {
             case 'Dom Element Request':
-                messageBody.callbackFunction(this.#elementHashTable.get(messageBody.divKey));
+                messageBody.callbackFunction(this.#elementHashTable.get(messageBody.divKey), messageBody.divKey);
                 break;
         }
     }

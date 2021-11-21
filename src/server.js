@@ -235,7 +235,7 @@ function loadAllData(n) {
     });
 }
 
-loadAllData(12);
+loadAllData(1);
 
 // function getDataWithFilters(object) {
 //     // TODO: Write a function that will mimic a database query and return JSON object

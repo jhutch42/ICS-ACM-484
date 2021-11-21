@@ -1,9 +1,17 @@
 export class ChartBuilder {
-    constructor() { };
+    #chartStagingArea;
 
-    drawEChart(data, type, pdiv, theme) {
+    constructor(publisher, subscriber) {
+        this.#chartStagingArea = new Map();
+        this.publisher = publisher;
+        this.subscriber = subscriber;
+        this.subscriber.setCallbackFunction(this.messageHandler);
+        this.messageHandler.bind(this);
+    };
 
-        const myChart = echarts.init(pdiv, theme);
+    drawEChart(data, type, div, theme) {
+
+        const myChart = echarts.init(div, theme);
         const option = {
             xAxis: {
                 type: 'value',
@@ -24,7 +32,51 @@ export class ChartBuilder {
         return myChart;
     };
 
-    buildHistogramOfPlayerRankings(data) {
-        
+    messageHandler(message) {
+        console.log(this);
+        switch (message.from) {
+            case 'dataManager':
+                if (message.body) this.#handleDataManagerMessage(message.body);
+                break;
+        }
+    }
+
+    #handleDataManagerMessage(messsageBody) {
+        console.log('test');
+        if (messageBody.message) {
+            switch (messsageBody.message) {
+                case 'Player Ranking Histogram Data':
+                    this.#createPlayerRankingHistogram(messageBody.data);
+                    break;
+            }
+        }
+    }
+
+    #createPlayerRankingHistogram(data) {
+        this.#chartStagingArea.set('uniquePlayersDiv', {
+            divKey: 'uniquePlayersDiv',
+            data: data,
+            divElement: undefined,
+            chartType: 'bar',
+            theme: 'dark'
+        });
+        this.publisher.publishMessage(
+            {
+                from: 'chartBuilder',
+                body: {
+                    message: 'Dom Element Request',
+                    divKey: 'uniquePlayersDiv',
+                    callbackFunction: this.processDivReturn
+                }
+            }
+        );
+    }
+
+    processDivReturn(divElement, divKey) {
+        if (this.#chartStagingArea.has(divKey)) {
+            chartData = this.#chartStagingArea.get(divKey);
+            this.drawEChart(chartData.data, chartData.chartType, divElement, chartData.theme);
+            this.#chartStagingArea.delete(divKey);
+        }
     }
 }

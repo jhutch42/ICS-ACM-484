@@ -49,7 +49,7 @@ export default class InstanceFactory {
     createChartBuilder(sizeOfWorkerPool) {
         if (this.#numberOfChartBuilders === 0) {
             this.#numberOfChartBuilders++;
-            return new ChartBuilder();
+            return new ChartBuilder(this.#createPublisher(), this.#createSubscriber());
         }
         else console.log('Only 1 ChartBuilder is allowed.');
         return undefined;
