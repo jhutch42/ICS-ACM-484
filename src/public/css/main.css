@@ -19,3 +19,12 @@ body {
     width: 600px;
     height: 600px
 }
+
+#oddsOfFavoriteWinningDiv {
+    width: 600px;
+    height: 600px;
+}
+#movesPerGameDiv {
+    width: 600px;
+    height: 600px;
+}

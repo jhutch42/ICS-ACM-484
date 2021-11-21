@@ -32,10 +32,13 @@ export default class DataManager {
                 break;
             case 'Get All Game Data':
                 this.gameData = body.data;
+                this.#printDataHead(2);
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length } });
                 this.createPlayerRankMapping();
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size } });
                 this.#createDataForPlayerRankingHistogram(100);
+                this.#createDataForOddsOfFavoriteWinning();
+                this.#createDataForNumberOfMovesPerGame();
                 break;
             case 'Sort Data By Field':
                 this.gameData = body.data;
@@ -105,8 +108,61 @@ export default class DataManager {
             });
     }
 
+    #createDataForOddsOfFavoriteWinning() {
+        const data = [{ value: 0, name: 'Favorite' }, { value: 0, name: 'Underdog' }, { value: 0, name: 'Draw' }];
+        this.gameData.forEach(game => {
+            const whiteElo = parseInt(game.WhiteElo);
+            const blackElo = parseInt(game.BlackElo);
+            switch (game.Result) {
+                case '1-0':
+                    if (whiteElo > blackElo) data[0].value += 1;
+                    else data[1].value += 1;
+                    break;
+                case '0-1':
+                    if (whiteElo < blackElo) data[0].value += 1;
+                    else data[1].value += 1;
+                    break;
+                default:
+                    data[2].value += 1;
+                    break;
+            }
+        });
+        this.publisher.publishMessage(
+            {
+                from: 'dataManager',
+                body:
+                {
+                    message: 'Odds Of Favorite Winning Pie Chart',
+                    data: data
+                }
+            });
+    }
+
+    #createDataForNumberOfMovesPerGame() {
+        let max = 0;
+        this.gameData.forEach(game => {
+            const moves = Object.keys(game.GameMoves).length;
+            if (moves > max) max = moves;
+        });
+        const data = {x: new Array(max + 1), y: new Array(max + 1).fill(0)}
+        for (let i = 1; i <= max; i++) data.x[i] = i;
+        this.gameData.forEach(game => {
+            const moves = Object.keys(game.GameMoves).length;
+            if (moves > 1) data.y[moves] += 1
+        });
+        this.publisher.publishMessage(
+            {
+                from: 'dataManager',
+                body:
+                {
+                    message: 'Moves Per Game Histogram Data',
+                    data: data
+                }
+            });
+    }
+
     #getAverageOfArray(array) {
-        if (array.length > 0) {
+        if (array.length > 1) {
             let sum = 0;
             array.forEach(element => sum += element);
             return sum / array.length;

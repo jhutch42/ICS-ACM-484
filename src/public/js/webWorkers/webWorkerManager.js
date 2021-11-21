@@ -9,7 +9,6 @@ export default class WebWorkerManager {
      * @param {number} sizeOfWorkerPool 
      */
     constructor(publisher, sizeOfWorkerPool) {
-        console.log(sizeOfWorkerPool);
         this.publisher = publisher;
         this.#workerIdIndex = -1;
         this.#workerHashTable = new Map();
@@ -76,10 +75,8 @@ export default class WebWorkerManager {
 
     #setWorkerMessageHandler(id) {
         this.#workerHashTable.get(id).worker.onmessage = (event, id) => {
-            console.log(event);
             if (event.data.message === 'Return With Data') this.#handleReturn(event.data.data, event.data.id);
             else if(event.data.message === 'Return With Sorted Data') this.#handleReturn(event.data.data, event.data.id);
-            else console.log(event.data);
         }
     }
 
