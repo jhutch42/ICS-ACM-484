@@ -17,6 +17,19 @@ export class ChartBuilder {
             case 'dataManager':
                 if (message.body) this.#handleDataManagerMessage(message.body);
                 break;
+            case 'moveVisualizer':
+                if (message.body) this.#handleMoveVisualizerMessage(message.body);
+                break;
+        }
+    }
+
+    #handleMoveVisualizerMessage(messageBody) {
+        if (messageBody.message){
+            switch (messageBody.message){
+                case 'Plot Move Percentages - Initial':
+                    this.#createMovePercentagesHistogram(messageBody.data);
+                    break;
+            }
         }
     }
 
@@ -97,6 +110,24 @@ export class ChartBuilder {
             this.chartStagingArea.delete(divKey);
             this.drawEChart(divElement, options, 'dark');
         }
+    }
+
+    #createMovePercentagesHistogram(data) {
+        this.chartStagingArea.set('moveVisualizationChartDiv', {
+            divKey: 'moveVisualizationChartDiv',
+            data: data,
+            divElement: undefined
+        });
+        this.publisher.publishMessage(
+            {
+                from: 'chartBuilder',
+                body: {
+                    message: 'Dom Element Request',
+                    divKey: 'moveVisualizationChartDiv',
+                    callbackFunction: this.processDivReturn.bind(this)
+                }
+            }
+        );
     }
 
     getOptions(chartData) {
@@ -184,6 +215,32 @@ export class ChartBuilder {
                         }
                     ]
                 }
+            case 'moveVisualizationChartDiv':
+                return {
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: chartData.data.moves,
+                        name: 'Player Ranking',
+                        nameLocation: 'middle',
+                        nameGap: 40
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: 'Number Of Players',
+                        nameLocation: 'middle',
+                        nameGap: 40
+                    },
+                    series: [
+                        {
+                            data: chartData.data.values,
+                            type: 'bar'
+                        }
+                    ]
+                }
+                break;
         }
     }
 }

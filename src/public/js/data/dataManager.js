@@ -1,3 +1,5 @@
+import { startVisualizing } from "../main.js";
+
 export default class DataManager {
     publisher;
     subscriber;
@@ -32,7 +34,8 @@ export default class DataManager {
                 break;
             case 'Get All Game Data':
                 this.gameData = body.data;
-                this.#printDataHead(2);
+                this.#printDataHead(10);
+                startVisualizing();
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length } });
                 this.createPlayerRankMapping();
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size } });
@@ -44,6 +47,9 @@ export default class DataManager {
                 this.gameData = body.data;
                 console.log('Sorted Data Returned from Web Worker');
                 this.#printDataHead(2);
+                break;
+            case 'Request List Of First Moves':
+                this.publisher.publishMessage({ from: 'dataManager', body: { message: 'First Move Data', data: this.#getFirstMoveData() } })
                 break;
         }
     }
@@ -144,7 +150,7 @@ export default class DataManager {
             const moves = Object.keys(game.GameMoves).length;
             if (moves > max) max = moves;
         });
-        const data = {x: new Array(max + 1), y: new Array(max + 1).fill(0)}
+        const data = { x: new Array(max + 1), y: new Array(max + 1).fill(0) }
         for (let i = 1; i <= max; i++) data.x[i] = i;
         this.gameData.forEach(game => {
             const moves = Object.keys(game.GameMoves).length;
@@ -176,5 +182,16 @@ export default class DataManager {
         }
     }
 
-
+    #getFirstMoveData() {
+        const data = { moves: [], values: [] };
+        this.gameData.forEach(game => {
+            const firstMove = game.GameMoves['1.'];
+            if (!data.moves.includes(firstMove)) {
+                data.moves.push(firstMove);
+                data.values[data.moves.indexOf(firstMove)] = 0;
+            }
+            data.values[data.moves.indexOf(firstMove)] += 1;
+        });
+        return data;
+    }
 }

@@ -5,6 +5,7 @@ import CSVReader from "../data/csv/csvReader.js";
 import WebWorkerManager from "../webWorkers/webWorkerManager.js";
 import { ChartBuilder } from "../echarts/chartBuilder.js";
 import { DomManager } from "../domManager/domManager.js";
+import { MoveVisualizer } from "../chessboardVisualization/moveVisualizer.js";
 
 export default class InstanceFactory {
     #numberOfDataManagers = 0;     // (Private) tracks number of DataManager Objects
@@ -40,6 +41,14 @@ export default class InstanceFactory {
         }
         else console.log('Only 1 WebWorkerManager is allowed.');
         return undefined;
+    }
+
+    /**
+     * Create A singleton Chess Board Manager.
+     * @returns a new Chessboard Manager object
+     */
+    createMoveVisuaizer(boardId) {
+        return new MoveVisualizer(boardId, this.#createPublisher());
     }
 
     /**

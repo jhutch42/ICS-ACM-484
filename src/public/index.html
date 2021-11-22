@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <title>ICS/ACM 484 Final Project</title>
     <link rel="stylesheet" href="css/main.css">
@@ -17,12 +18,32 @@
 <body>
     <h1>Welcome to our ICS/ACM 484 Final Project</h1>
     <h2 id="loadingDiv">Please be patient while our dataset loads</h2>
-    <div id="uniquePlayersDiv"></div>
-    <div id="uniquePlayersChartDiv"></div>
-    <div id="oddsOfFavoriteWinningDiv"></div>
-    <div id="movesPerGameDiv"></div>
-     <div id="board1" style="width: 400px"></div>
+        <div id="uniquePlayersDiv"></div>
+    <div class="two-column-wrapper">
+        <div id="uniquePlayersChartDiv"></div>
+        <div class="chart-description">
+            <h2>Unique Players By Rank</h2>
+        </div>
+    </div>
+    <div class="two-column-wrapper">
+        <div id="oddsOfFavoriteWinningDiv"></div>
+        <div class="chart-description">
+            <h2>Odds of Higher Ranked Player Winning</h2>
+        </div>
+    </div>
+    <div class="two-column-wrapper">
+        <div id="movesPerGameDiv"></div>
+        <div class="chart-description">
+            <h2>Moves Per Game</h2>
+        </div>
+    </div>
+    <div id="moveVisualizationWrapper" class="two-column-wrapper">
+        <div id="board1"></div>
+        <div id="moveVisualizationChartDiv"></div>
+    </div>
+
     <!-- <div class="lds-facebook"><div></div><div></div><div></div></div> -->
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

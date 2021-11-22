@@ -10,9 +10,18 @@ CHARTBUILDER.publisher.subscribe(DOMMANAGER.messageHandler.bind(DOMMANAGER));
 DATAMANAGER.publisher.subscribe(CHARTBUILDER.messageHandler.bind(CHARTBUILDER));
 DOMMANAGER.publisher.subscribe(CHARTBUILDER.messageHandler.bind(CHARTBUILDER));
 
+const chessboard_1 = FACTORY.createMoveVisuaizer('board1');
+DATAMANAGER.publisher.subscribe(chessboard_1.messageHandler.bind(chessboard_1));
+chessboard_1.publisher.subscribe(DATAMANAGER.messageHandler.bind(DATAMANAGER));
+chessboard_1.publisher.subscribe(CHARTBUILDER.messageHandler.bind(CHARTBUILDER));
 DATAMANAGER.checkDataAvailability();
 
-var board1 = ChessBoard('board1', 'start');
+
+export function startVisualizing() {
+    chessboard_1.initializeNewChessboard();
+    chessboard_1.startVisualization();
+}
+
 
 //CHARTBUILDER.drawEChart(DATAMANAGER.getRankingHistogramData(100));
 

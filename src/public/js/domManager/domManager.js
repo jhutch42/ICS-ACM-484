@@ -11,6 +11,7 @@ export class DomManager {
         this.#elementHashTable.set('uniquePlayersChartDiv', document.querySelector('#uniquePlayersChartDiv'));
         this.#elementHashTable.set('oddsOfFavoriteWinningDiv', document.querySelector('#oddsOfFavoriteWinningDiv'));
         this.#elementHashTable.set('movesPerGameDiv', document.querySelector('#movesPerGameDiv'));
+        this.#elementHashTable.set('moveVisualizationChartDiv', document.querySelector('#moveVisualizationChartDiv'));
     };
 
     #updateText(elementKey, text) {
