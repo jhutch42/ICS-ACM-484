@@ -12,6 +12,8 @@ DOMMANAGER.publisher.subscribe(CHARTBUILDER.messageHandler.bind(CHARTBUILDER));
 
 DATAMANAGER.checkDataAvailability();
 
+var board1 = ChessBoard('board1', 'start');
+
 //CHARTBUILDER.drawEChart(DATAMANAGER.getRankingHistogramData(100));
 
 // document.addEventListener('keyup', (e) => {
