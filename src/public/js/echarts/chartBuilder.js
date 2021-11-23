@@ -223,13 +223,16 @@ export class ChartBuilder {
                     xAxis: {
                         type: 'category',
                         data: chartData.data.moves,
-                        name: 'Player Ranking',
+                        name: 'Next Move',
                         nameLocation: 'middle',
-                        nameGap: 40
+                        nameGap: 40, 
+                        axisLabel: {
+                            interval: 0
+                        }
                     },
                     yAxis: {
                         type: 'value',
-                        name: 'Number Of Players',
+                        name: 'Times Made',
                         nameLocation: 'middle',
                         nameGap: 40
                     },

@@ -304,7 +304,8 @@ function parseGameMoves(gameString) {
             if (splitMoves[i] === '{') {
                 inParenthesis = true;
             } else {
-                moves.push(splitMoves[i]);
+                let moveString = splitMoves[i].replace('?', '');
+                moves.push(moveString.replace('!', ''));
             }
         } else {
             if (splitMoves[i] === '}') {
