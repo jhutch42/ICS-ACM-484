@@ -49,17 +49,19 @@ export default class DataManager {
                 this.#printDataHead(2);
                 break;
             case 'Request List Of First Moves':
-                const firstMoveData = this.#getFirstMoveData(); 
+                const firstMoveData = this.#getFirstMoveData();
                 this.publisher.publishMessage(
-                    { from: 'dataManager', 
-                    body: { 
-                        message: 'First Move Data', 
-                        data: firstMoveData
-                    } });
+                    {
+                        from: 'dataManager',
+                        body: {
+                            message: 'First Move Data',
+                            data: firstMoveData
+                        }
+                    });
                 body.callback(firstMoveData);
                 break;
             case 'Request List of Next Moves':
-                const moveData =this.#getNextMoveData(body.moveList);
+                const moveData = this.#getNextMoveData(body.moveList);
                 this.publisher.publishMessage(
                     {
                         from: 'dataManager',
@@ -68,7 +70,7 @@ export default class DataManager {
                             data: moveData
                         }
                     });
-                    body.callback(moveData);
+                body.callback(moveData);
                 break;
 
         }
@@ -216,11 +218,11 @@ export default class DataManager {
             }
         });
         const combinedData = [];
-        for(let i = 0; i < moves.length; i++) {
-            combinedData.push({move: moves[i], value: values[i]});
+        for (let i = 0; i < moves.length; i++) {
+            combinedData.push({ move: moves[i], value: values[i] });
         }
-        combinedData.sort((a,b) => b.value - a.value);
-        const data = {moves: [], values:[]};
+        combinedData.sort((a, b) => b.value - a.value);
+        const data = { moves: [], values: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);
             data.values.push(datapoint.value);
@@ -236,7 +238,6 @@ export default class DataManager {
         this.gameData.forEach(game => {
             const gameMoves = Object.values(game.GameMoves);
             let match = true;
-
             for (let i = 0; i < moveList.length; i++) {
                 // TODO: Strip the check and ! and all of those characters.
                 let testMove = gameMoves[i];
@@ -246,14 +247,23 @@ export default class DataManager {
                     testMove = testMove.replace('?', '');
                     testMove = testMove.replace('+', '');
                     testMove = testMove.replace('#', '');
+                    if (testMove.length > 2 && (
+                        testMove[0] === 'a' ||
+                        testMove[0] === 'b' ||
+                        testMove[0] === 'c' ||
+                        testMove[0] === 'd' ||
+                        testMove[0] === 'e' ||
+                        testMove[0] === 'f' ||
+                        testMove[0] === 'g' ||
+                        testMove[0] === 'h'
+                    )) {
+                        testMove = testMove.substr(1);
+                    }
                 }
-                if (testMove !== moveList[i]) {
-                    match = false;
-                }
+                if (testMove !== moveList[i]) match = false;
             }
             if (match) matchingGames.push(game);
         });
-
         matchingGames.forEach(game => {
             const nextMove = Object.values(game.GameMoves)[moveList.length];
             if (nextMove) {
@@ -265,11 +275,11 @@ export default class DataManager {
             }
         });
         const combinedData = [];
-        for(let i = 0; i < moves.length; i++) {
-            combinedData.push({move: moves[i], value: values[i]});
+        for (let i = 0; i < moves.length; i++) {
+            combinedData.push({ move: moves[i], value: values[i] });
         }
-        combinedData.sort((a,b) => b.value - a.value);
-        const data = {moves: [], values:[]};
+        combinedData.sort((a, b) => b.value - a.value);
+        const data = { moves: [], values: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);
             data.values.push(datapoint.value);

@@ -29,6 +29,12 @@ app.post('/', function (req, res) {
     res.end(JSON.stringify(data));
 });
 
+/**** The Deternimes the files to load. Each file is 20000 games. 16 files is the max i have been
+ * able to load without running out of heap memory.
+ */
+const numberOfGameFilesToLoad = 16;
+
+
 const openingsList = [];
 const classicalGames = [];
 const classicalGamesMap = new Map();
@@ -235,8 +241,7 @@ function loadAllData(n) {
     });
 }
 
-loadAllData(1);
-
+loadAllData(numberOfGameFilesToLoad); 
 // function getDataWithFilters(object) {
 //     // TODO: Write a function that will mimic a database query and return JSON object
 // }
