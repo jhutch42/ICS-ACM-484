@@ -49,7 +49,12 @@
   CSS['sparePiecesBottom'] = 'spare-pieces-bottom-ae20f'
   CSS['sparePiecesTop'] = 'spare-pieces-top-4028b'
   CSS['square'] = 'square-55d63'
-  CSS['white'] = 'white-1e1d7'
+  CSS['white'] = 'white-1e1d7';
+  CSS['gradient'] = [];
+  for(let i = 0; i < 40; i++) {
+    CSS['gradient'].push(`g${i}`);
+  }
+  
 
   // ---------------------------------------------------------------------------
   // Misc Util Functions
@@ -1192,8 +1197,6 @@
         return
       }
 
-      removeSquareHighlights()
-
       // animation complete
       function complete () {
         drawPositionInstant()
@@ -1314,6 +1317,40 @@
           .find('.' + CSS.piece)
           .css('display', 'none')
       }
+    }
+
+
+    const squareArray = [];
+    for (let i = 1; i < 9; i++) {
+      squareArray.push(`a${i}`);
+      squareArray.push(`b${i}`);
+      squareArray.push(`c${i}`);
+      squareArray.push(`d${i}`);
+      squareArray.push(`e${i}`);
+      squareArray.push(`f${i}`);
+      squareArray.push(`g${i}`);
+      squareArray.push(`h${i}`);
+    }
+
+    widget.highlightSquare = function (square, gradientIndex) {
+      console.log(square, gradientIndex);
+      if (validSquare(square)) {
+        for(let i = 0; i < CSS.gradient.length; i++) {
+          $('#' + squareElsIds[square]).removeClass(CSS.gradient[i]);
+        }
+        $('#' + squareElsIds[square]).addClass(CSS.gradient[gradientIndex]);
+      }
+    }
+
+    widget.removeGradientHighlights = function () {
+      squareArray.forEach(square => {
+        for(let i = 0; i < CSS.gradient.length; i++) {
+          if (validSquare(square)) {
+            $('#' + squareElsIds[square]).removeClass(CSS.gradient[i]);
+          } else console.log('invalid');
+        }
+
+      });
     }
 
     function updateDraggedPiece (x, y) {

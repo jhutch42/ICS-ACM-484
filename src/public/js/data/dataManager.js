@@ -221,7 +221,7 @@ export default class DataManager {
         for (let i = 0; i < moves.length; i++) {
             combinedData.push({ move: moves[i], value: values[i] });
         }
-        combinedData.sort((a, b) => b.value - a.value);
+        combinedData.sort((a, b) => a.value - b.value);
         const data = { moves: [], values: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);
@@ -278,7 +278,7 @@ export default class DataManager {
         for (let i = 0; i < moves.length; i++) {
             combinedData.push({ move: moves[i], value: values[i] });
         }
-        combinedData.sort((a, b) => b.value - a.value);
+        combinedData.sort((a, b) => a.value - b.value);
         const data = { moves: [], values: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);

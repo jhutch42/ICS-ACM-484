@@ -220,17 +220,17 @@ export class ChartBuilder {
                     tooltip: {
                         trigger: 'item'
                     },
-                    xAxis: {
+                    yAxis: {
                         type: 'category',
                         data: chartData.data.moves,
                         name: 'Next Move',
                         nameLocation: 'middle',
-                        nameGap: 40, 
+                        nameGap: 34, 
                         axisLabel: {
                             interval: 0
                         }
                     },
-                    yAxis: {
+                    xAxis: {
                         type: 'value',
                         name: 'Times Made',
                         nameLocation: 'middle',

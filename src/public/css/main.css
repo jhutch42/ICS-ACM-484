@@ -91,3 +91,24 @@ body {
     justify-content: center;
 }
 
+.black-3c85d {
+  background-color: #b58863;
+  color: #f0d9b5;
+}
+
+#gradientLegendWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gradientLegend {
+  width: 60%;
+  background: linear-gradient(90deg, #7298ab 0%, #4ca9a7 25%,  #64b37e 50%, #abb14a 75%, #f49f42 100%);
+  height: 20px;
+}
+
+#gradientLegendWrapper > p {
+  padding: 0 6px 0 6px;
+}
