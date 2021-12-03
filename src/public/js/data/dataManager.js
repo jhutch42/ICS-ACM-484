@@ -190,11 +190,9 @@ export default class DataManager {
     }
 
     #getAverageOfArray(array) {
-        if (array.length > 1) {
-            let sum = 0;
-            array.forEach(element => sum += element);
-            return sum / array.length;
-        } else return -1;
+        let sum = 0;
+        array.forEach(element => sum += element);
+        return sum / array.length;
 
     }
 
@@ -207,34 +205,60 @@ export default class DataManager {
     #getFirstMoveData() {
         const moves = [];
         const values = [];
+        const ratings = [];
+        const wins = [];
         this.gameData.forEach(game => {
             const firstMove = game.GameMoves['1.'];
             if (firstMove) {
                 if (!moves.includes(firstMove)) {
                     moves.push(firstMove);
                     values[moves.indexOf(firstMove)] = 0;
+                    ratings[moves.indexOf(firstMove)] = [];
+                    wins[moves.indexOf(firstMove)] = {white: 0, black: 0, draw: 0};
                 }
                 values[moves.indexOf(firstMove)] += 1;
+                ratings[moves.indexOf(firstMove)].push(parseInt(game.WhiteElo));
+                if (game.Result === '1-0') wins[moves.indexOf(firstMove)].white += 1;
+                else if (game.Result === '0-1') wins[moves.indexOf(firstMove)].black += 1;
+                else wins[moves.indexOf(firstMove)].draw += 1;
             }
         });
+
+        const avgRatings = [];
+        ratings.forEach(array => avgRatings.push(this.#getAverageOfArray(array)));
+
+        for(let i = 0; i < wins.length; i++) wins[i] = this.#convertWinLoseDrawPercentages(wins[i]);
+
         const combinedData = [];
         for (let i = 0; i < moves.length; i++) {
-            combinedData.push({ move: moves[i], value: values[i] });
+            combinedData.push({ move: moves[i], value: values[i], rating: avgRatings[i], winLoseDraw: wins[i] });
         }
         combinedData.sort((a, b) => a.value - b.value);
-        const data = { moves: [], values: [] };
+        const data = { moves: [], values: [], ratings: [], winLoseDraw: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);
             data.values.push(datapoint.value);
+            data.ratings.push(parseInt(datapoint.rating));
+            data.winLoseDraw.push(datapoint.winLoseDraw);
         });
-        console.log(data);
         return data;
+    }
+
+    #convertWinLoseDrawPercentages(winLoseDraw) {
+        const total = winLoseDraw.white + winLoseDraw.black + winLoseDraw.draw;
+        winLoseDraw.white = (winLoseDraw.white/total).toFixed(2);
+        winLoseDraw.black = (winLoseDraw.black/total).toFixed(2);
+        winLoseDraw.draw = (winLoseDraw.draw/total).toFixed(2);
+        return winLoseDraw;
     }
 
     #getNextMoveData(moveList) {
         const moves = [];
         const values = [];
         const matchingGames = [];
+        const wins = [];
+        const ratings = [];
+
         this.gameData.forEach(game => {
             const gameMoves = Object.values(game.GameMoves);
             let match = true;
@@ -264,26 +288,40 @@ export default class DataManager {
             }
             if (match) matchingGames.push(game);
         });
-        matchingGames.forEach(game => {
+        matchingGames.forEach((game, index) => {
             const nextMove = Object.values(game.GameMoves)[moveList.length];
             if (nextMove) {
                 if (!moves.includes(nextMove)) {
                     moves.push(nextMove);
                     values[moves.indexOf(nextMove)] = 0;
+                    ratings[moves.indexOf(nextMove)] = [];
+                    wins[moves.indexOf(nextMove)] = {white: 0, black: 0, draw: 0};
                 }
                 values[moves.indexOf(nextMove)] += 1;
+                const elo = moveList.length % 2 === 0 ? game.WhiteElo : game.BlackElo;
+                ratings[moves.indexOf(nextMove)].push(parseInt(elo));
+                if (game.Result === '1-0') wins[moves.indexOf(nextMove)].white += 1;
+                else if (game.Result === '0-1') wins[moves.indexOf(nextMove)].black += 1;
+                else wins[moves.indexOf(nextMove)].draw += 1;
             }
         });
+
+        const avgRatings = [];
+        ratings.forEach(array => avgRatings.push(this.#getAverageOfArray(array)));
+        for(let i = 0; i < wins.length; i++) wins[i] = this.#convertWinLoseDrawPercentages(wins[i]);
         const combinedData = [];
         for (let i = 0; i < moves.length; i++) {
-            combinedData.push({ move: moves[i], value: values[i] });
+            combinedData.push({ move: moves[i], value: values[i], rating: avgRatings[i], winLoseDraw: wins[i] });
         }
         combinedData.sort((a, b) => a.value - b.value);
-        const data = { moves: [], values: [] };
+        const data = { moves: [], values: [], ratings: [], winLoseDraw: [] };
         combinedData.forEach(datapoint => {
             data.moves.push(datapoint.move);
             data.values.push(datapoint.value);
+            data.ratings.push(parseInt(datapoint.rating));
+            data.winLoseDraw.push(datapoint.winLoseDraw);
         });
         return data;
     }
+
 }

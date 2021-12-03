@@ -18,7 +18,7 @@
 <body>
     <h1>Welcome to our ICS/ACM 484 Final Project</h1>
     <h2 id="loadingDiv">Please be patient while our dataset loads</h2>
-        <div id="uniquePlayersDiv"></div>
+    <div id="uniquePlayersDiv"></div>
     <div class="two-column-wrapper">
         <div id="uniquePlayersChartDiv"></div>
         <div class="chart-description">
@@ -38,7 +38,9 @@
         </div>
     </div>
     <div id="gradientLegendWrapper">
-        <p>50% + </p><div id="gradientLegend"></div><p>&#60; 1</p>
+        <p>50% + </p>
+        <div id="gradientLegend"></div>
+        <p>&#60; 1</p>
     </div>
     <div id="moveVisualizationWrapper" class="two-column-wrapper">
         <div id="board1"></div>
@@ -50,8 +52,35 @@
             <p>22%</p>
         </div> -->
     </div>
-    <div id="moveVisualizerResetButtonContainer"><input type="button" value="Reset" class="button" id="resetMoveVisualizerButton" /></div>
+    <div id="moveVisualizerResetButtonContainer"><input type="button" value="Reset" class="button"
+            id="resetMoveVisualizerButton" /></div>
 
+    <div id="dataPopup">
+        <div class="two-column-wrapper">
+            <p class="left-p">Square Name: </p>
+            <p class="right-p" id="squareText"></p>
+        </div>
+        <div class="two-column-wrapper">
+            <p class="left-p">Percentage: </p>
+            <p class="right-p" id="percentageText">50%</p>
+        </div>
+        <div class="two-column-wrapper">
+            <p class="left-p">Average Rating: </p>
+            <p class="right-p" id="ratingText">1500</p>
+        </div>
+        <p class="sectionTitle">Winner</p>
+        <div class="win-lose-draw">
+            <div id="white">
+                <p>33%</p>
+            </div>
+            <div id="black">
+                <p>33%</p>
+            </div>
+            <div id="draw">
+                <p>33%</p>
+            </div>
+        </div>
+    </div>
     <!-- <div class="lds-facebook"><div></div><div></div><div></div></div> -->
     <script type="module" src="js/main.js"></script>
 </body>

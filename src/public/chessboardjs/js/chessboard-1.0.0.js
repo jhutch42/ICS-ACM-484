@@ -1333,7 +1333,6 @@
     }
 
     widget.highlightSquare = function (square, gradientIndex) {
-      console.log(square, gradientIndex);
       if (validSquare(square)) {
         for(let i = 0; i < CSS.gradient.length; i++) {
           $('#' + squareElsIds[square]).removeClass(CSS.gradient[i]);
@@ -1742,7 +1741,7 @@
       }
 
       // execute their function
-      config.onMouseoverSquare(square, piece, deepCopy(currentPosition), currentOrientation)
+      config.onMouseoverSquare(square, piece, deepCopy(currentPosition), currentOrientation, evt)
     }
 
     function mouseleaveSquare (evt) {

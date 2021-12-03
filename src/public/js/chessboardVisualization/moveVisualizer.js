@@ -1,3 +1,5 @@
+import { DataPopup } from "./dataPopup.js";
+
 export class MoveVisualizer {
 
     constructor(divId, publisher) {
@@ -8,6 +10,7 @@ export class MoveVisualizer {
         this.currentMoveData = [];
         this.#setResetEventListener();
         this.whiteTurn = true;
+        this.dataPopup = new DataPopup();
     }
 
     initializeNewChessboard() {
@@ -26,9 +29,29 @@ export class MoveVisualizer {
         this.publisher.publishMessage({ from: 'moveVisualizer', body: { message: 'Request List Of First Moves', callback: this.processMoves.bind(this) } });
     }
 
-    mouseenterSquare(square, piece, position, orientation) {
-        // console.log(square, piece, position, orientation);
+    mouseenterSquare(square, piece, position, orientation, event) {
+        const rect = event.target.getBoundingClientRect();
+        const value = this.isAMappedSquare(square);
+        if (value) {
+            this.dataPopup.show();
+            this.dataPopup.moveToSquare(rect.right, rect.top + window.pageYOffset);
+            this.dataPopup.updateSquareText(square);
+            this.dataPopup.updatePercentageText(value.percentage);
+            this.dataPopup.updateAverageRatingText(value.rating);
+            this.dataPopup.updateWinLoseDrawBar(value.winLoseDraw);
+        } else this.dataPopup.hide();
     }
+
+    isAMappedSquare(square) {
+        for (let i = 0; i < this.currentMoveData.moves.length; i++) {
+            let move = this.currentMoveData.moves[i];
+            if (move === 'O-O') move = this.whiteTurn ? 'g1' : 'g8';
+            if (move === 'O-O-O') move = this.whiteTurn ? 'c1' : 'c8';
+            if (this.#stripLeadingCharacterForHighlight(move) === square) return {percentage: this.currentMoveData.values[i], rating: this.currentMoveData.ratings[i], winLoseDraw: this.currentMoveData.winLoseDraw[i]};
+        }
+        return false;
+    }
+
     onDrop(oldLocation, newLocation, source, piece, position, orientation) {
         // Delay Function exection until piece is dropped onto the board
         setTimeout(() => {
@@ -93,7 +116,6 @@ export class MoveVisualizer {
         for (let i = 0; i < this.currentMoveData.moves.length; i++) {
             const gradientIndex = this.getGradientValue(this.currentMoveData.values[i]);
             let move = this.currentMoveData.moves[i];
-            console.log(move);
             if (move === 'O-O') move = this.whiteTurn ? 'g1' : 'g8';
             if (move === 'O-O-O') move = this.whiteTurn ? 'c1' : 'c8';
             this.board.highlightSquare(this.#stripLeadingCharacterForHighlight(move), gradientIndex);

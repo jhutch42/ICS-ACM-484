@@ -28,6 +28,40 @@ body {
   height: 500px;
 }
 
+#dataPopup {
+  width: 220px;
+  height: 145px;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  opacity: 0.7;
+  border-radius: 10px;
+  flex-direction: column;
+  color: white;
+  transition: top 0.3s ease-out;
+  transition: left 0.3s ease-out;
+}
+
+#dataPopup > div {
+  margin: 0;
+}
+
+#dataPopup > div > p {
+  margin: 0;
+  padding: 0 4px 0 4px;
+  text-align: left;
+}
+
+.left-p {
+  width: 70%;
+}
+
+.right-p {
+  width: 30%;
+}
+
 .chart-description {
 }
 
@@ -111,4 +145,63 @@ body {
 
 #gradientLegendWrapper > p {
   padding: 0 6px 0 6px;
+}
+
+.win-lose-draw {
+  display: flex;
+  flex-direction: row;
+  width: 94%;
+  padding: 3px 3% 3px 3%;
+  height: 30px;
+}
+
+#white {
+  background-color: white;
+  width: 33%;
+  transition: width 0.3s ease-out;
+  text-align: center;
+  color: black;
+}
+
+#black {
+  background-color: black;
+  width: 33%;
+  transition: width 0.3s ease-out;
+  text-align: center;
+  color: white;
+  border-bottom: 1px solid white;
+  border-top: 1px solid white;
+  height: calc(100% - 2px);
+}
+#draw {
+  background-color: gray;
+  width: 33%;
+  transition: width 0.3s ease-out;
+  text-align: center;
+  color: black;
+  border-bottom: 1px solid white;
+  border-top: 1px solid white;
+  height: calc(100% - 2px);
+}
+
+.win-lose-draw >div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.win-lose-draw >div>p {
+  text-align: center;
+  width: 100%;
+}
+
+#dataPopup > .sectionTitle {
+  width: 100%;
+  text-align: center;
+  margin: 1px 0 3px 0;
+}
+
+#dataPopup > .two-column-wrapper {
+  padding: 3px 10px 3px 10px;
 }
