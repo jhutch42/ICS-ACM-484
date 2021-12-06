@@ -9,5 +9,12 @@
   },
   "author": "",
   "license": "ISC",
-  "engines": { "node" : "14.4.0" }
+  "engines": {
+    "node": "14.4.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "heroku": "^7.59.2"
+  }
 }
