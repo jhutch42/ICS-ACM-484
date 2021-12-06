@@ -1,5 +1,5 @@
 let id = -1;
-const url = 'http://127.0.0.1:4040/';
+const url = 'https://chess-visualization.herokuapp.com/';
 // Example POST method implementation:
 
 async function postData(url, data) {
