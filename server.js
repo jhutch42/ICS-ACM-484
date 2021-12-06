@@ -12,7 +12,7 @@ app.use(
     })
 )
 app.use(express.json())
-app.use(express.static('./public'));
+app.use(express.static('./src/public'));
 
 // const PORT = process.env.PORT || 4040;
 
@@ -199,7 +199,7 @@ const data = [];
 let count = 0;
 function loadAllData(n) {
     for (let i = 0; i < n; i++) {
-        const filename = `chessDataFiles/ratedClassicalGame_${i}.json`;
+        const filename = `src/chessDataFiles/ratedClassicalGame_${i}.json`;
         fs.readFile(filename, 'utf8', (error, data) => {
             if (error) {
                 console.log(error);
@@ -228,7 +228,7 @@ function loadAllData(n) {
         });
 
     }
-    fs.readFile('chessDataFiles/openingsList.json', 'utf8', (error, data) => {
+    fs.readFile('src/chessDataFiles/openingsList.json', 'utf8', (error, data) => {
         if (error) {
             console.log(error);
             return;
