@@ -16,31 +16,96 @@
 </head>
 
 <body>
-    <h1>Welcome to our ICS/ACM 484 Final Project</h1>
+    <div id="title-wrapper">
+        <h1>Investigating Classical Chess on Lichess</h1>
+    </div>
     <h2 id="loadingDiv">Please be patient while our dataset loads</h2>
-    <div id="uniquePlayersDiv"></div>
+    <div class="two-column-wrapper">
+        <img id="horse-head" src="images/lichessHorseHead.png" />
+        <div class="chart-description">
+            <h2>Our Data</h2>
+            <p>Lichess.com is one of the worlds most popular chess websites, where more than 1,000,000 games are played
+                daily. The service
+                is completely free and open-sourced and matches players in ranked and unranked games around the world.
+                Lichess releases the data
+                from all games played on it's server every month to here: <a
+                    href="https://database.lichess.org/">https://database.lichess.org/</a>.</p>
+
+            <p>We selected games from September, 2021 which was a set of 88,133,339 games. We chose to reduce the large
+                dataset by choosing only classical games, meaning
+                games where the time controls are at least 25 minutes. We selected these games because we believed that
+                these games are likely to be taken seriously due
+                to the amount of time committed by the players. Due to memory constraints, we selected roughly the first
+                320,000 games to examine.</p>
+        </div>
+    </div>
     <div class="two-column-wrapper">
         <div id="uniquePlayersChartDiv"></div>
         <div class="chart-description">
             <h2>Unique Players By Rank</h2>
+            <p>This dataset contains games played by <span id="uniquePlayersDiv"></span> unique players. The
+                distribution of ranking is nearly a perfect
+                gaussian distribution, with a spike in the range of 1500 - 1600. In fact, it turns out that there are
+                <span id="newbPlayersDiv"></span> who, at one point during
+                this time period, were ranked at exactly 1500. This makes sense because Lichess uses the Glicko ranking
+                system, which recommends giving players at 1500 ranking for their first game. This
+                initial ranking point also explains the distribution.</p>
         </div>
     </div>
+
     <div class="two-column-wrapper">
         <div id="oddsOfFavoriteWinningDiv"></div>
         <div class="chart-description">
             <h2>Odds of Higher Ranked Player Winning</h2>
+            <p>After looking at the ranking distribution, we wondered, how does a player's ranking affect the outcome of
+                their games? It turns out, it affects it a lot, and does so in the
+                way one might expect. The higher ranked player, wins their games <span id="favorite-winner"></span> of
+                the time. The underdog wins <span id="underdog-winner"></span> of them time, and the remaining
+                <span id="draw-winner"> </span> of games end in a draw.
+            </p>
+
+            <p>These statistics give creedence to the validity of the Glicko ratings system, and to the matchmaking
+                abilities of Lichess.com. Looking at the difference between the players, it turns out
+                that the average rating difference is only <span id="avgRatingDiff"></span>.
+            </p>
         </div>
     </div>
     <div class="two-column-wrapper">
         <div id="movesPerGameDiv"></div>
         <div class="chart-description">
             <h2>Moves Per Game</h2>
+            <p>We wondered what kind of games people were playing in this dataset. This chart shows the number of moves
+                per game, and we see some interesting results.</p>
+            <p>Clearly, there is quite a range of moves per game, with some as short as a single game. It is not
+                possible to checkmate someone so quickly, so we can assume that
+                these were games where someone abandoned the game. One the other end of the spectrum, we see that there
+                are a few very long games. The longest game took
+                <span id="max-game-num-moves"></span>.
+            </p>
+            <p>Who played this extra long game we wondered. Well, it was played by White: <span
+                    id="max-white-name"></span>
+                (rating <span id="max-white-elo"></span>), and <span id="max-black-name"></span> (rating <span
+                    id="max-black-elo"></span>).</p>
+            <p><span id="max-outcome"></span>, and if you are interested in seeing this game, you can follow this link <a id="max-link"></a>.</p>
         </div>
     </div>
-    <div id="gradientLegendWrapper">
-        <p>50% + </p>
-        <div id="gradientLegend"></div>
-        <p>&#60; 1</p>
+    <div class="two-column-wrapper" id="gradient-elofilter">
+        <div id="gradientLegendWrapper">
+            <p>50% + </p>
+            <div id="gradientLegend"></div>
+            <p>&#60; 1</p>
+        </div>
+        <div id="elo-filter-wrapper">
+            <div id="slider-bar"></div>
+            <div id="slider-high" class="slider-wrapper">
+                <div id="maxEloText" class="eloText">3000</div>
+                <div class="slider-vert"></div>
+            </div>
+            <div id="slider-low" class="slider-wrapper">
+                <div id="minEloText" class="eloText">0</div>
+                <div class="slider-vert"></div>
+            </div>
+        </div>
     </div>
     <div id="moveVisualizationWrapper" class="two-column-wrapper">
         <div id="board1"></div>
@@ -68,7 +133,8 @@
             <p class="left-p">Average Rating: </p>
             <p class="right-p" id="ratingText">1500</p>
         </div>
-        <p class="sectionTitle">Winner</p>
+        <p class="sectionTitle">Game Winner</p>
+        <p class="sectionTitle">White | Black | Draw</p>
         <div class="win-lose-draw">
             <div id="white">
                 <p>33%</p>

@@ -2,11 +2,19 @@
 :root {
   --main-background-color: #292929;
   --main-text-color: white;
+  --red: #dd6b66;
+  --blue: #759aa0;
+  --orange: #e69d87;
+  --green: #8dc1a9;
 }
 
 @font-face {
   font-family: "Sora";
   src: url("../fonts/Sora-VariableFont_wght.ttf");
+}
+
+a {
+  color: #759aa0;
 }
 
 body {
@@ -30,7 +38,7 @@ body {
 
 #dataPopup {
   width: 220px;
-  height: 145px;
+  height: 135px;
   background-color: black;
   position: absolute;
   top: 0;
@@ -42,6 +50,7 @@ body {
   color: white;
   transition: top 0.3s ease-out;
   transition: left 0.3s ease-out;
+  font-size: 11px;
 }
 
 #dataPopup > div {
@@ -63,9 +72,20 @@ body {
 }
 
 .chart-description {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
 }
 
 .chart-description > h2 {
+  width: 100%;
+  text-align: center;
+  color: white;
+  text-decoration: underline;
+}
+
+#loadingDiv {
   width: 100%;
   text-align: center;
 }
@@ -131,18 +151,22 @@ body {
 }
 
 #gradientLegendWrapper {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 500px;
+  height: 40px;
 }
 
 #gradientLegend {
-  width: 60%;
+  width: 80%;
   background: linear-gradient(90deg, #7298ab 0%, #4ca9a7 25%,  #64b37e 50%, #abb14a 75%, #f49f42 100%);
   height: 20px;
 }
 
+#gradient-elofilter {
+  height: 40px;
+}
 #gradientLegendWrapper > p {
   padding: 0 6px 0 6px;
 }
@@ -204,4 +228,74 @@ body {
 
 #dataPopup > .two-column-wrapper {
   padding: 3px 10px 3px 10px;
+}
+
+#elo-filter-wrapper {
+  width: 500px;
+  height: 50px;
+}
+
+#slider-bar {
+  width: 90%;
+  background-color: white;
+  height: 15px;
+  position: relative;
+  top: 7.5px;
+  left: 5%;
+}
+
+.slider-wrapper {
+  top: -40px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.slider-vert {
+  width: 5px;
+  height: 40px;
+  background-color: black;
+  position: relative;
+  top: 20px;
+}
+
+.eloText {
+  position: absolute;
+  left: -28px;
+  text-align: center;
+  width: 60px;
+}
+
+#slider-high {
+  left: 470px;
+}
+
+#slider-low { 
+  left: 16px;
+}
+
+#title-wrapper {
+  padding-top: 20px;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.red {
+  color: #dd6b66;
+}
+
+.blue {
+  color: var(--blue);
+}
+
+.orange {
+  color: var(--orange);
+}
+#horse-head {
+  width: 500px;
 }

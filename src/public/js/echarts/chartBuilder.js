@@ -106,7 +106,6 @@ export class ChartBuilder {
     processDivReturn(divElement, divKey) {
         if (this.chartStagingArea.has(divKey)) {
             const options = this.getOptions(this.chartStagingArea.get(divKey));
-            console.log(options);
             this.chartStagingArea.delete(divKey);
             this.drawEChart(divElement, options, 'dark');
         }

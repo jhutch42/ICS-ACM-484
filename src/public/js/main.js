@@ -19,6 +19,7 @@ DATAMANAGER.checkDataAvailability();
 
 export function startVisualizing() {
     chessboard_1.initializeNewChessboard();
+    chessboard_1.initializeEloSlider();
     chessboard_1.startVisualization();
 }
 

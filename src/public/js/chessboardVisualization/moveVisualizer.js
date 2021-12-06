@@ -1,7 +1,8 @@
 import { DataPopup } from "./dataPopup.js";
+import { EloSlider } from "./eloSlider.js";
 
 export class MoveVisualizer {
-
+    eloSlider;
     constructor(divId, publisher) {
         this.divId = divId;
         this.publisher = publisher;
@@ -11,6 +12,15 @@ export class MoveVisualizer {
         this.#setResetEventListener();
         this.whiteTurn = true;
         this.dataPopup = new DataPopup();
+    }
+
+    updateMovesCallback(min, max) {
+        this.publisher.publishMessage({
+            from: 'moveVisualizer',
+            body: {
+                message: 'Request List of Next Moves', moveList: this.moveArray.moves, min: min, max: max, callback: this.processMoves.bind(this)
+            }
+        });
     }
 
     initializeNewChessboard() {
@@ -24,9 +34,22 @@ export class MoveVisualizer {
         this.board = Chessboard(this.divId, options);
     }
 
+    initializeEloSlider() {
+        this.publisher.publishMessage({
+            from: 'moveVisualizer',
+            body: {
+                message: 'Get Elo Data', callback: this.createEloSlider.bind(this)
+            }
+        });
+    }
+
+    createEloSlider(min, max) {
+        this.eloSlider = new EloSlider(min, max, this.updateMovesCallback.bind(this));
+    }
+
     startVisualization() {
         this.moveArray = { moves: [], positions: [] };
-        this.publisher.publishMessage({ from: 'moveVisualizer', body: { message: 'Request List Of First Moves', callback: this.processMoves.bind(this) } });
+        this.publisher.publishMessage({ from: 'moveVisualizer', body: { message: 'Request List Of First Moves', min: this.eloSlider.currentMinElo, max: this.eloSlider.currentMaxElo, callback: this.processMoves.bind(this) } });
     }
 
     mouseenterSquare(square, piece, position, orientation, event) {
@@ -43,13 +66,24 @@ export class MoveVisualizer {
     }
 
     isAMappedSquare(square) {
+        const squares = [];
         for (let i = 0; i < this.currentMoveData.moves.length; i++) {
             let move = this.currentMoveData.moves[i];
             if (move === 'O-O') move = this.whiteTurn ? 'g1' : 'g8';
             if (move === 'O-O-O') move = this.whiteTurn ? 'c1' : 'c8';
-            if (this.#stripLeadingCharacterForHighlight(move) === square) return {percentage: this.currentMoveData.values[i], rating: this.currentMoveData.ratings[i], winLoseDraw: this.currentMoveData.winLoseDraw[i]};
+            if (this.#stripLeadingCharacterForHighlight(move) === square) squares.push({ percentage: this.currentMoveData.values[i], rating: this.currentMoveData.ratings[i], winLoseDraw: this.currentMoveData.winLoseDraw[i] });
         }
-        return false;
+        if (squares.length === 1) return squares[0];
+        else if (squares.length > 1) {
+            const max = { index: -1, value: -Infinity };
+            for (let i = 0; i < squares.length; i++) {
+                if (squares[i].percentage > max.value) {
+                    max.index = i;
+                    max.value = squares[i].percentage;
+                }
+            }
+            return squares[max.index];
+        } else return false;
     }
 
     onDrop(oldLocation, newLocation, source, piece, position, orientation) {
@@ -86,7 +120,7 @@ export class MoveVisualizer {
             this.publisher.publishMessage({
                 from: 'moveVisualizer',
                 body: {
-                    message: 'Request List of Next Moves', moveList: this.moveArray.moves, callback: this.processMoves.bind(this)
+                    message: 'Request List of Next Moves', moveList: this.moveArray.moves, min: this.eloSlider.currentMinElo, max: this.eloSlider.currentMaxElo, callback: this.processMoves.bind(this)
                 }
             });
         }, 50);
@@ -125,7 +159,7 @@ export class MoveVisualizer {
 
     getGradientValue(percentage) {
         let val = parseInt(39 * percentage * 2 * 0.01);
-        val = val > 39 ? 39: val;
+        val = val > 39 ? 39 : val;
         return 39 - val;
     }
 
