@@ -301,9 +301,16 @@ body {
 }
 
 .one-column-wrapper {
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 10px;
+}
+
+.one-column-wrapper> p, h2 {
+  width: 1000px;
+}
+.one-column-wrapper> h2 {
+  text-align: center;
 }

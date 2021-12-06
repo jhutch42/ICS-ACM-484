@@ -14,12 +14,11 @@ app.use(
 app.use(express.json())
 app.use(express.static('./public'));
 
-const PORT = process.env.PORT || 4040;
+// const PORT = process.env.PORT || 4040;
 
-app.listen(PORT, () => {
-    console.log('Server connected at:', PORT);
-});
-
+app.listen(process.env.PORT || 4000, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
 app.post('/', function (req, res) {
     res.set({
         "Content-Type": "application/json",
@@ -32,7 +31,7 @@ app.post('/', function (req, res) {
 /**** The Deternimes the files to load. Each file is 20000 games. 16 files is the max i have been
  * able to load without running out of heap memory.
  */
-const numberOfGameFilesToLoad = 1;
+const numberOfGameFilesToLoad = 16;
 
 
 const openingsList = [];
