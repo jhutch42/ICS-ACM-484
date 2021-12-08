@@ -300,6 +300,10 @@ body {
   width: 500px;
 }
 
+#created-by {
+  width: 100%;
+  text-align: center;
+}
 .one-column-wrapper {
   display: flex;
   flex-direction: column;
