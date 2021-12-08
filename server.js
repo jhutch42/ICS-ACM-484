@@ -37,6 +37,8 @@ const numberOfGameFilesToLoad = 16;
 
 const openingsList = [];
 const classicalGames = [];
+const blackcapfreq = [];
+const whitecapfreq = [];
 const classicalGamesMap = new Map();
 let dataIsSet = false;
 
@@ -239,6 +241,28 @@ function loadAllData(n) {
         });
         console.log(`Openings Data Loaded. ${openingsList.length} openings`);
     });
+    
+    //read frequency data
+    fs.readFile('src/chessDataFiles/b_move_freq.json', 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        const list = JSON.parse(data);
+        Object.values(list).forEach(object => {
+            blackcapfreq.push(object);
+        });
+     });
+        fs.readFile('src/chessDataFiles/w_move_freq.json', 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        const list = JSON.parse(data);
+        Object.values(list).forEach(object => {
+            whitecapfreq.push(object);
+        });
+     });
 }
 
 loadAllData(numberOfGameFilesToLoad); 
