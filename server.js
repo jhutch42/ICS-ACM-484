@@ -37,6 +37,8 @@ const numberOfGameFilesToLoad = 3;
 
 const openingsList = [];
 const classicalGames = [];
+const blackcapfreq = [];
+const whitecapfreq = [];
 const classicalGamesMap = new Map();
 let dataIsSet = false;
 
