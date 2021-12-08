@@ -147,7 +147,7 @@ export class ChartBuilder {
                         type: 'value',
                         name: 'Number Of Players',
                         nameLocation: 'middle',
-                        nameGap: 40
+                        nameGap: 38
                     },
                     series: [
                         {
@@ -205,7 +205,7 @@ export class ChartBuilder {
                         type: 'value',
                         name: 'Number Of Games',
                         nameLocation: 'middle',
-                        nameGap: 40
+                        nameGap: 34
                     },
                     series: [
                         {

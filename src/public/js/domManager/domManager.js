@@ -24,6 +24,7 @@ export class DomManager {
         this.#elementHashTable.set('max-black-elo', document.querySelector('#max-black-elo'));
         this.#elementHashTable.set('max-outcome', document.querySelector('#max-outcome'));
         this.#elementHashTable.set('max-link', document.querySelector('#max-link'));
+        this.#elementHashTable.set('number-of-games', document.querySelector('#number-of-games'));
     };
 
     #updateText(elementKey, text) {
@@ -45,6 +46,7 @@ export class DomManager {
         switch (messageBody.message) {
             case 'All Games Loaded':
                 this.#updateText('loadingDiv', `<span class="red">${messageBody.data.toLocaleString('en-US')}</span> unique chess games loaded.`);
+                this.#updateText('number-of-games', `<span class="red">${messageBody.data.toLocaleString('en-US')}</span>`);
                 break;
             case 'Player Rankings Map Loaded':
                 this.#updateText('uniquePlayersDiv', `${messageBody.data}`);
@@ -57,23 +59,23 @@ export class DomManager {
                 this.#updateText('underdog-winner', `<span class="blue">${messageBody.data[1].value.toLocaleString('en-US')}%</span>`);
                 this.#updateText('draw-winner', `<span class="orange">${messageBody.data[2].value.toLocaleString('en-US')}%</span>`);
                 break;
-                case 'Average Ratings Difference':
-                    this.#updateText('avgRatingDiff',`<span class="red">${parseInt(messageBody.data)}</span>`);
-                    break;
-                case 'Max Moves Game Data':
-                    this.#updateText('max-game-num-moves', `<span class="red">${parseInt(messageBody.data.moves)}`);
-                    this.#updateText('max-white-name', `<span class="red">${messageBody.data.white}`);
-                    this.#updateText('max-black-name', `<span class="red">${messageBody.data.black}`);
-                    this.#updateText('max-white-elo', `<span class="red">${parseInt(messageBody.data.whiteElo)}`);
-                    this.#updateText('max-black-elo', `<span class="red">${parseInt(messageBody.data.blackElo)}`);
+            case 'Average Ratings Difference':
+                this.#updateText('avgRatingDiff', `<span class="red">${parseInt(messageBody.data)}</span>`);
+                break;
+            case 'Max Moves Game Data':
+                this.#updateText('max-game-num-moves', `<span class="red">${parseInt(messageBody.data.moves)}`);
+                this.#updateText('max-white-name', `<span class="red">${messageBody.data.white}`);
+                this.#updateText('max-black-name', `<span class="red">${messageBody.data.black}`);
+                this.#updateText('max-white-elo', `<span class="red">${parseInt(messageBody.data.whiteElo)}`);
+                this.#updateText('max-black-elo', `<span class="red">${parseInt(messageBody.data.blackElo)}`);
 
-                    let outcomeString = 'This epic game ended with an anticlimatic draw';
-                    if (messageBody.data.result === '1-0') outcomeString = `${messageBody.data.white} won this game playing the white pieces`;
-                    if (messageBody.data.result === '0-1') outcomeString = `${messageBody.data.black} won this game playing the black pieces`;
-                    this.#updateText('max-outcome', outcomeString);
-                    this.#updateText('max-link', `${messageBody.data.link}`);
-                    this.#elementHashTable.get('max-link').href = messageBody.data.link;
-                    break;
+                let outcomeString = 'This epic game ended with an anticlimatic draw';
+                if (messageBody.data.result === '1-0') outcomeString = `${messageBody.data.white} won this game playing the white pieces`;
+                if (messageBody.data.result === '0-1') outcomeString = `${messageBody.data.black} won this game playing the black pieces`;
+                this.#updateText('max-outcome', outcomeString);
+                this.#updateText('max-link', `${messageBody.data.link}`);
+                this.#elementHashTable.get('max-link').href = messageBody.data.link;
+                break;
         }
     }
 

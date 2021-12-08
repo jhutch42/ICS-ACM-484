@@ -36,7 +36,7 @@ export default class DataManager {
                 this.gameData = body.data;
                 this.#printDataHead(10);
                 startVisualizing();
-                this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length } });
+                this.publisher.publishMessage({ from: 'dataManager', body: { message: 'All Games Loaded', data: this.gameData.length + 1 } });
                 this.createPlayerRankMapping();
                 this.publisher.publishMessage({ from: 'dataManager', body: { message: 'Player Rankings Map Loaded', data: this.#playerRankMapping.size } });
                 this.#createDataForPlayerRankingHistogram(100);
@@ -125,7 +125,7 @@ export default class DataManager {
             let newbs = 0;
             this.#playerRankMapping.forEach(entry => {
                 entry.rankingArray.forEach(rank => {
-                    if (parseInt(rank) === 1500) newbs +=1;
+                    if (parseInt(rank) === 1500) newbs += 1;
                 });
                 entry.rankingAverage = parseInt(this.#getAverageOfArray(entry.rankingArray));
             });
@@ -253,7 +253,7 @@ export default class DataManager {
                 body:
                 {
                     message: 'Max Moves Game Data',
-                    data: {moves: max, white: whiteName, black: blackName, whiteElo: whiteElo, blackElo: blackElo, result: result, link: linkToGame}
+                    data: { moves: max, white: whiteName, black: blackName, whiteElo: whiteElo, blackElo: blackElo, result: result, link: linkToGame }
                 }
             });
 
@@ -262,17 +262,21 @@ export default class DataManager {
     #getAvgRatingDiff() {
         let total = 0;
         let numGames = 0;
-        this.gameData.forEach(game => {
-            numGames++;
-            total += Math.abs(parseInt(game.BlackElo) - parseInt(game.WhiteElo));
+        this.gameData.forEach((game, index) => {
+            if (isNaN(game.BlackElo) || isNaN(game.WhiteElo)) console.log(index, game);
+            else {
+                numGames++;
+                total += Math.abs(parseInt(game.BlackElo) - parseInt(game.WhiteElo));
+            }
         });
+        console.log(total, numGames)
         this.publisher.publishMessage(
             {
                 from: 'dataManager',
                 body:
                 {
                     message: 'Average Ratings Difference',
-                    data: (total/numGames)
+                    data: (total / numGames)
                 }
             });
     }
@@ -296,11 +300,11 @@ export default class DataManager {
             if (game.GameMoves) {
                 Object.values(game.GameMoves).forEach(move => {
                     if (move.includes('#'))
-                    checkmateGames.push(game);
+                        checkmateGames.push(game);
                 });
             }
         });
-        const data = {checkmates: 0, white: 0, black: 0, favoriteWon: 0, averageMoves: 0, minMoves: Infinity, maxMoves: -Infinity, piecesLeftAvg: 0, piecesLeftMax: -Infinity, piecesLeftMin: Infinity};
+        const data = { checkmates: 0, white: 0, black: 0, favoriteWon: 0, averageMoves: 0, minMoves: Infinity, maxMoves: -Infinity, piecesLeftAvg: 0, piecesLeftMax: -Infinity, piecesLeftMin: Infinity };
         let totalMoves = 0;
         let totalPiecesLeft = 0;
         let minPiecesLeft = Infinity;
@@ -308,7 +312,7 @@ export default class DataManager {
         checkmateGames.forEach(game => {
             data.checkmates += 1;
             if (game.Result === '1-0') {
-                data.white+=1;
+                data.white += 1;
                 if (parseInt(game.WhiteElo) > parseInt(game.BlackElo)) data.favoriteWon += 1;
             } else if (game.Result === '0-1') {
                 data.black += 1;
@@ -345,7 +349,7 @@ export default class DataManager {
                 && parseInt(game.WhiteElo) > min
                 && parseInt(game.WhiteElo) < max) {
                 const firstMove = game.GameMoves['1.'];
-                if (firstMove) {
+                if (firstMove && firstMove.length < 7) {
                     if (!moves.includes(firstMove)) {
                         moves.push(firstMove);
                         values[moves.indexOf(firstMove)] = 0;
