@@ -1,8 +1,7 @@
-let id = -1;
 const url = 'https://chess-visualization.herokuapp.com/';
 //const url = 'http://localhost:4040';
 // Example POST method implementation:
-
+let id = -1;
 async function postData(url, data) {
     data.clientId = id;
     //console.log(JSON.stringify(data));
