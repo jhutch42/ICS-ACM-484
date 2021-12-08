@@ -314,3 +314,11 @@ body {
 .one-column-wrapper> h2 {
   text-align: center;
 }
+
+#outcome-graphic > img {
+  width: 500px;
+}
+
+.extra-long {
+  height: 700px;
+}
