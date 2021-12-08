@@ -1,6 +1,6 @@
 let id = -1;
-// const url = 'https://chess-visualization.herokuapp.com/';
-const url = 'http://localhost:4040';
+const url = 'https://chess-visualization.herokuapp.com/';
+ //const url = 'http://localhost:4040';
 // Example POST method implementation:
 
 async function postData(url, data) {
