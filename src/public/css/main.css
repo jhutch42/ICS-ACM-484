@@ -36,6 +36,11 @@ body {
   height: 500px;
 }
 
+.two-column-wrapper > img {
+  width: 500px;
+  padding: 20px;
+}
+
 #dataPopup {
   width: 220px;
   height: 135px;
