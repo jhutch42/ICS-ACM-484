@@ -32,7 +32,7 @@ app.post('/', function (req, res) {
 /**** The Deternimes the files to load. Each file is 20000 games. 16 files is the max i have been
  * able to load without running out of heap memory.
  */
-const numberOfGameFilesToLoad = 2;
+const numberOfGameFilesToLoad = 1;
 
 
 const openingsList = [];
