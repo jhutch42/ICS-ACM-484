@@ -13,7 +13,7 @@ export default class WebWorkerManager {
         this.#workerIdIndex = -1;
         this.#workerHashTable = new Map();
         this.#workerQueue = [];
-        this.#createWorkerPool(sizeOfWorkerPool);  // Create an initial pool of web workers.
+        this.#createWorkerPool(1);  // Create an initial pool of web workers.
     };
 
     /** Gets Data from the server
